@@ -1,0 +1,34 @@
+hash: 1dd8769c32b1503607b37a17965cda4a87be44527c3338680fcb064e44633432
+updated: 2016-05-14T13:43:32.569905907-06:00
+imports:
+- name: github.com/akutz/gofig
+  version: 84e1fb25c0a0fd2f2da6d7ce7827881f7c80eef5
+- name: github.com/akutz/golf
+  version: e26bdd995cb746e431d42ea303ebe7622389d29f
+- name: github.com/akutz/goof
+  version: ea06624ca980bae80c1b615b8417723436d235ab
+- name: github.com/akutz/gotil
+  version: 6fa2e80bd3ac40f15788cfc3d12ebba49a0add92
+- name: github.com/appropriate/go-virtualboxclient
+  version: e0978ab2ed407095400a69d5933958dd260058cd
+  repo: https://github.com/clintonskitson/go-virtualboxclient
+  vcs: git
+- name: github.com/blang/semver
+  version: 31b736133b98f26d5e078ec9eb591666edfd091f
+  vcs: git
+- name: github.com/cesanta/validate-json
+  version: 2f16017c76fc2403d143e93cea1e1b9526a01148
+- name: github.com/emccode/goscaleio
+  version: 53ea76f52205380ab52b9c1f4ad89321c286bb95
+  repo: https://github.com/emccode/goscaleio
+  vcs: git
+- name: github.com/jteeuwen/go-bindata
+  version: 1dd44b25b79c4d9060e582e90798e4d72537818c
+  repo: https://github.com/akutz/go-bindata
+- name: github.com/Sirupsen/logrus
+  version: 5f376aa629ac60c3215cc368e674bd996093a01a
+  repo: https://github.com/akutz/logrus
+  vcs: git
+- name: github.com/stretchr/testify
+  version: 6cb3b85ef5a0efef77caef88363ec4d4b5c0976d
+devImports: []
