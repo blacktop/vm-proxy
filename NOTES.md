@@ -1,31 +1,28 @@
-  Hi Balachandar,
+# Notes
 
-You can also look at vboxshell.py, which contains rich set of examples 
-on usage of VirtualBox API (and works via both SOAP and COM).
-To power off VM code similar to following is used:
+### VBoxManage Commands to Cover
 
-from vboxapi import VirtualBoxManager
+#### Start
+ - VBoxManage "snapshot", label  
+ - VBoxManage "restore", machine.snapshot  
+ - VBoxManage "restorecurrent", machine.snapshot  
+ 
+ #### Stop (with timeout)
+  - VBoxManage controlvm <label> poweroff  
 
-style = "WEBSERVICE" # or None for local COM/XPCOM
-g_virtualBoxManager = VirtualBoxManager(style, None)
-mgr=g_virtualBoxManager.mgr
-vb=g_virtualBoxManager.vbox
-session = mgr.getSessionObject(vb)
-uuid = mach.id
-try:
-progress = vb.openExistingSession(session, uuid)
-except Exception,e:
-print "Session to '%s' not open: %s" %(mach.name,e)
-if g_verbose:
-traceback.print_exc()
-return
-console=session.console
-console.powerDown()
-session.close()
-
-VirtualBox needs separate session open phase to obtain exclusive control 
-over VM execution, that's why sample is a bit more complex that one 
-would wish.
-
-Thanks,
-Nikolay
+ #### List
+  - VBoxManage list vms
+ 
+ #### Status
+  - VBoxManage showvminfo <label> --machinereadable  
+  
+ #### Dump Memory
+ - VBoxManage debugvm <label> dumpvmcore --filename <path>
+ - VBoxManage debugvm <label> dumpguestcore --filename <path>
+ 
+ #### Dump PCAP
+  - VBoxManage controlvm <label> nictracefile1 <pcap_path>  
+  - VBoxManage controlvm <label> nictrace1 on  
+  
+#### Version
+ - VBoxManage -v
