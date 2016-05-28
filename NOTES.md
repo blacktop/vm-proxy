@@ -9,28 +9,28 @@ VBoxManage "restore", machine.snapshot
 VBoxManage "restorecurrent", machine.snapshot
 ```
 
- #### Stop (with timeout)
+#### Stop (with timeout)
 ```bash
 VBoxManage controlvm <label> poweroff
 ```
 
- #### List
+#### List
 ```bash
 VBoxManage list vms
 ```
 
- #### Status
+#### Status
 ```bash
 VBoxManage showvminfo <label> --machinereadable
 ```
 
- #### Dump Memory
+#### Dump Memory
 ```bash
 VBoxManage debugvm <label> dumpvmcore --filename <path>
 VBoxManage debugvm <label> dumpguestcore --filename <path>
 ```
 
- #### Dump PCAP
+#### Dump PCAP
 ```bash
 VBoxManage controlvm <label> nictracefile1 <pcap_path>
 VBoxManage controlvm <label> nictrace1 on
