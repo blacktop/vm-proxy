@@ -4,14 +4,18 @@
 
 #### Start
 ```bash
-VBoxManage snapshot <LABEL> restore <snapshot>
-VBoxManage snapshot <LABEL> restorecurrent
 VBoxManage startvm <LABEL> --type <MODE>
 ```
 
 #### Stop (with timeout)
 ```bash
 VBoxManage controlvm <LABEL> poweroff
+```
+
+#### Snapshot
+```bash
+VBoxManage snapshot <LABEL> restore <snapshot>
+VBoxManage snapshot <LABEL> restorecurrent
 ```
 
 #### List
