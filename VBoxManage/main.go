@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/blacktop/vm-proxy/client/cmd"
+import "github.com/blacktop/vm-proxy/VBoxManage/cmd"
 
 func main() {
 	cmd.Execute()
