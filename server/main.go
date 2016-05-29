@@ -5,6 +5,12 @@ import (
 	"net/http"
 )
 
+func assert(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 
 	router := NewRouter()
