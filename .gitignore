@@ -25,3 +25,5 @@ _testmain.go
 
 .vscode
 debug
+
+server/server
