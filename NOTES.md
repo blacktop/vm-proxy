@@ -43,7 +43,7 @@ VBoxManage -v
 
 ### vboxwebsrv
 
-## Install on OSX
+#### Install on OSX
 ```bash
 $ edit $HOME/Library/LaunchAgents/org.virtualbox.vboxwebsrv.plist
 ```
