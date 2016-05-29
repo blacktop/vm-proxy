@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/blacktop/vm-proxy/vmrun/cmd"
+import "github.com/blacktop/vm-proxy/clients/vmrun/cmd"
 
 func main() {
 	cmd.Execute()
