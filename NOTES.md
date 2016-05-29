@@ -4,9 +4,8 @@
 
 #### Start
 ```bash
-VBoxManage snapshot <label>
-VBoxManage restore <snapshot>
-VBoxManage restorecurrent <snapshot>
+VBoxManage snapshot <label> restore <snapshot>
+VBoxManage snapshot <label> restorecurrent
 ```
 
 #### Stop (with timeout)
