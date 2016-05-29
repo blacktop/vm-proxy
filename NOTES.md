@@ -4,13 +4,14 @@
 
 #### Start
 ```bash
-VBoxManage snapshot <label> restore <snapshot>
-VBoxManage snapshot <label> restorecurrent
+VBoxManage snapshot <LABEL> restore <snapshot>
+VBoxManage snapshot <LABEL> restorecurrent
+VBoxManage startvm <LABEL> --type <MODE>
 ```
 
 #### Stop (with timeout)
 ```bash
-VBoxManage controlvm <label> poweroff
+VBoxManage controlvm <LABEL> poweroff
 ```
 
 #### List
@@ -20,19 +21,19 @@ VBoxManage list vms
 
 #### Status
 ```bash
-VBoxManage showvminfo <label> --machinereadable
+VBoxManage showvminfo <LABEL> --machinereadable
 ```
 
 #### Dump Memory
 ```bash
-VBoxManage debugvm <label> dumpvmcore --filename <path>
-VBoxManage debugvm <label> dumpguestcore --filename <path>
+VBoxManage debugvm <LABEL> dumpvmcore --filename <PATH>
+VBoxManage debugvm <LABEL> dumpguestcore --filename <PATH>
 ```
 
 #### Dump PCAP
 ```bash
-VBoxManage controlvm <label> nictracefile1 <pcap_path>
-VBoxManage controlvm <label> nictrace1 on
+VBoxManage controlvm <LABEL> nictracefile1 <PCAP_PATH>
+VBoxManage controlvm <LABEL> nictrace1 on
 ```
 
 #### Version
