@@ -16,29 +16,33 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 )
+
+// Type vm start mode
+var Type string
 
 // startvmCmd represents the startvm command
 var startvmCmd = &cobra.Command{
 	Use:   "startvm",
 	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long:  `A longer description that spans multiple lines`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("startvm called")
+		d := virtualbox.NewDriver("", "")
+		outList, err := d.StartVM(args[0], Type)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(outList)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(startvmCmd)
-
+	startvmCmd.PersistentFlags().StringVarP(&Type, "type", "", "", "gui|headless|separate")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

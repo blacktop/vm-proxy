@@ -16,7 +16,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 )
 
@@ -24,15 +26,14 @@ import (
 var controlvmCmd = &cobra.Command{
 	Use:   "controlvm",
 	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long:  `A longer description that spans multiple lines`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("controlvm called")
+		d := virtualbox.NewDriver("", "")
+		outList, err := d.StopVM(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(outList)
 	},
 }
 

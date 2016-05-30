@@ -16,23 +16,28 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
 
+	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 )
 
 // showvminfoCmd represents the showvminfo command
 var showvminfoCmd = &cobra.Command{
-	Use:   "showvminfo",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "showvminfo <uuid|vmname>",
+	Short: "Display VM info",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("showvminfo called")
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(0)
+		}
+		d := virtualbox.NewDriver("", "")
+		outList, err := d.Status(args[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Print(outList)
 	},
 }
 
@@ -47,6 +52,6 @@ func init() {
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// showvminfoCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	showvminfoCmd.Flags().BoolP("machinereadable", "", false, "Display machine readable output")
 
 }

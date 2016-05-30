@@ -264,6 +264,92 @@ func (d *Driver) PreCreateCheck() error {
 	return nil
 }
 
+func (d *Driver) Version() (string, error) {
+	stdOut, err := d.vbmOut("--version")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) VersionCheck() error {
+	// Check that VBoxManage exists and works
+	version, err := d.vbmOut("--version")
+	if err != nil {
+		return err
+	}
+
+	// Check that VBoxManage is of a supported version
+	if err = checkVBoxManageVersion(strings.TrimSpace(version)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) DebugVM(name string, dmpcmd string, path string) (string, error) {
+	// VBoxManage debugvm <LABEL> dumpvmcore --filename <PATH>
+	// VBoxManage debugvm <LABEL> dumpguestcore --filename <PATH>
+	if strings.EqualFold(dmpcmd, "dumpvmcore") {
+		stdOut, err := d.vbmOut("debugvm", name, "dumpvmcore", "--filename", path)
+		if err != nil {
+			return "", err
+		}
+		return stdOut, nil
+	}
+	stdOut, err := d.vbmOut("debugvm", name, "dumpguestcore", "--filename", path)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) Status(name string) (string, error) {
+	stdOut, err := d.vbmOut("showvminfo", name, "--machinereadable")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) List() (string, error) {
+	stdOut, err := d.vbmOut("list", "vms")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) StartVM(name string, mode string) (string, error) {
+	stdOut, err := d.vbmOut("startvm", name, "--type", mode)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) StopVM(name string) (string, error) {
+	stdOut, err := d.vbmOut("controlvm", name, "poweroff")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) Snapshot(name string, snapshot string) (string, error) {
+	if snapshot != "" {
+		stdOut, err := d.vbmOut("snapshot", name, "restore", snapshot)
+		if err != nil {
+			return "", err
+		}
+		return stdOut, nil
+	}
+	stdOut, err := d.vbmOut("snapshot", name, "restorecurrent")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
 func (d *Driver) Create() error {
 	if err := d.CreateVM(); err != nil {
 		return err

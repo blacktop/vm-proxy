@@ -18,4 +18,5 @@ import "github.com/blacktop/vm-proxy/clients/VBoxManage/cmd"
 
 func main() {
 	cmd.Execute()
+	// doc.GenMarkdownTree(cmd.RootCmd, "./")
 }

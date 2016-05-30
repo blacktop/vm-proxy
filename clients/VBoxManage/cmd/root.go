@@ -16,27 +16,40 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 
+var version bool
+
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "VBoxManage",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-// Uncomment the following line if your bare application
-// has an action associated with it:
-//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "Oracle VM VirtualBox Command Line Management Interface Version 5.0.20",
+	Long: `Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
+(C) 2005-2016 Oracle Corporation
+All rights reserved.`,
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	Run: func(cmd *cobra.Command, args []string) {
+		if version {
+			d := virtualbox.NewDriver("", "")
+			outList, err := d.Version()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Print(outList)
+		} else {
+			cmd.Help()
+			os.Exit(0)
+		}
+	},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -58,7 +71,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.VBoxManage.yaml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.Flags().BoolVarP(&version, "version", "v", false, "print version number and exit")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -68,8 +81,8 @@ func initConfig() {
 	}
 
 	viper.SetConfigName(".VBoxManage") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")  // adding home directory as first search path
-	viper.AutomaticEnv()          // read in environment variables that match
+	viper.AddConfigPath("$HOME")       // adding home directory as first search path
+	viper.AutomaticEnv()               // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

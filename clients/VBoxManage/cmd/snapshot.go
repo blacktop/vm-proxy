@@ -16,29 +16,103 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strings"
 
+	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 )
 
+var projectBase string
+var userLicense string
+
 // snapshotCmd represents the snapshot command
 var snapshotCmd = &cobra.Command{
-	Use:   "snapshot",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "snapshot <uuid|vmname>",
+	Short: "Manage virtualbox snapshots",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("snapshot called")
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(0)
+		}
+		d := virtualbox.NewDriver("", "")
+		if len(args) == 3 {
+			if strings.EqualFold("restore", args[1]) {
+				outList, err := d.Snapshot(args[0], args[2])
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Print(outList)
+			}
+		}
+		if strings.EqualFold("restorecurrent", args[1]) {
+			outList, err := d.Snapshot(args[0], "")
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Print(outList)
+		}
+	},
+}
+
+var restoreCmd = &cobra.Command{
+	Use:   "restore <uuid|snapname>",
+	Short: "Restore snapshot",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(args)
+		// d := virtualbox.NewDriver("", "")
+		// outList, err := d.Snapshot(args[0], args[2])
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// fmt.Print(outList)
+	},
+}
+
+var restorecurrentCmd = &cobra.Command{
+	Use:   "restorecurrent",
+	Short: "A brief description of your command",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(args)
+		// d := virtualbox.NewDriver("", "")
+		// outList, err := d.Snapshot(args[0], "")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// fmt.Print(outList)
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(snapshotCmd)
+	tmplt := `Usage:{{if .Runnable}}
+  {{if .HasAvailableFlags}}{{appendIfNotPresent .UseLine ""}}{{else}}{{.UseLine}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
+  {{ .CommandPath}} <uuid|vmname> [command]{{end}}{{if gt .Aliases 0}}
+Aliases:
+  {{.NameAndAliases}}
+{{end}}{{if .HasExample}}
 
+Examples:
+{{ .Example }}{{end}}{{ if .HasAvailableSubCommands}}
+
+Available Commands:{{range .Commands}}{{if .IsAvailableCommand}}
+  {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableLocalFlags}}
+  
+Flags:
+{{.LocalFlags.FlagUsages | trimRightSpace}}{{end}}{{ if .HasAvailableInheritedFlags}}
+
+Global Flags:
+{{.InheritedFlags.FlagUsages | trimRightSpace}}{{end}}{{if .HasHelpSubCommands}}
+
+Additional help topics:{{range .Commands}}{{if .IsHelpCommand}}
+  {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableSubCommands }}
+  
+Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
+`
+	RootCmd.AddCommand(snapshotCmd)
+	snapshotCmd.AddCommand(restoreCmd)
+	snapshotCmd.AddCommand(restorecurrentCmd)
+	snapshotCmd.SetUsageTemplate(tmplt)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
