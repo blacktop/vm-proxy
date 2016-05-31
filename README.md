@@ -9,12 +9,11 @@
 
 ### Getting Started (OSX)
 
-Install: 
+#### Install:
  - [Docker for Mac](https://beta.docker.com/)
  - [jq](https://stedolan.github.io/jq/)  
- 
- 
- Now run:
+
+#### Now run:
 ```bash
 $ git clone https://github.com/blacktop/vm-proxy.git
 $ cd vm-proxy/server
