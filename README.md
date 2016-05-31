@@ -15,9 +15,13 @@
 
 #### Now run:
 ```bash
-$ git clone https://github.com/blacktop/vm-proxy.git
-$ cd vm-proxy/server
+$ go get -v github.com/docker/machine
+$ go get -v github.com/blacktop/vm-proxy
+$ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
 $ go run *.go &
 # To list all VirtualBox VMs
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) alpine wget -qO- dockerhost:5000/vms | jq .
 ```
+
+### Downloads
+I will be releasing binaries of **VBoxManage** and **vmrun** soon.
