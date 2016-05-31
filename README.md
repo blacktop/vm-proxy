@@ -1,5 +1,4 @@
 # vm-proxy
-[![GoDoc][godoc]](https://godoc.org/github.com/blacktop/vm-proxy)
 ![License][license]  
 
 **VBoxManage/vmrun** proxy to allow communication from within a VM to the hypervisor running the VM.
