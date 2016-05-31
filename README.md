@@ -10,7 +10,7 @@
 ### Getting Started (OSX)
 
 Install: 
- - Docker for Mac
+ - [Docker for Mac](https://beta.docker.com/)
  - [jq](https://stedolan.github.io/jq/)  
  
  
