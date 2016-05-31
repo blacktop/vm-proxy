@@ -335,14 +335,15 @@ func (d *Driver) StopVM(name string) (string, error) {
 	return stdOut, nil
 }
 
-func (d *Driver) Snapshot(name string, snapshot string) (string, error) {
-	if snapshot != "" {
-		stdOut, err := d.vbmOut("snapshot", name, "restore", snapshot)
-		if err != nil {
-			return "", err
-		}
-		return stdOut, nil
+func (d *Driver) RestoreSnapshot(name string, snapshot string) (string, error) {
+	stdOut, err := d.vbmOut("snapshot", name, "restore", snapshot)
+	if err != nil {
+		return "", err
 	}
+	return stdOut, nil
+}
+
+func (d *Driver) RestoreCurrentSnapshot(name string) (string, error) {
 	stdOut, err := d.vbmOut("snapshot", name, "restorecurrent")
 	if err != nil {
 		return "", err

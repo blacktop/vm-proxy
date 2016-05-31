@@ -19,7 +19,10 @@ $ go get -v github.com/blacktop/vm-proxy
 $ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
 $ go run *.go &
 # To list all VirtualBox VMs
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) alpine wget -qO- dockerhost:5000/vms | jq .
+$ LOCAL=$(ipconfig getifaddr en0)
+$ docker run --rm --add-host=dockerhost:$LOCAL alpine \
+            wget -qO- dockerhost:5000/virtualbox/list \
+            | jq .
 ```
 
 ### Downloads
