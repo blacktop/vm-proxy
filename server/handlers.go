@@ -67,15 +67,14 @@ func VBoxStart(w http.ResponseWriter, r *http.Request) {
 
 // VBoxStop router stops a VM
 func VBoxStop(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	// var nameOrID string
-	var err error
-	nameOrID := vars["nameOrID"]
-	machine, err := virtualbox.GetMachine(nameOrID)
-	assert(err)
-	assert(machine.Stop())
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
+
+	vars := mux.Vars(r)
+	nameOrID := vars["nameOrID"]
+
+	d := vbox.NewDriver(nameOrID, "")
+	assert(d.Stop())
 }
 
 // VBoxSnapshotRestore restores a certain snapshot
@@ -84,8 +83,9 @@ func VBoxSnapshotRestore(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	nameOrID := vars["nameOrID"]
 	snapShot := vars["snapShot"]
-
-	d := vbox.NewDriver("", "")
+	fmt.Println(nameOrID)
+	fmt.Println(snapShot)
+	d := vbox.NewDriver(nameOrID, "")
 	outPut, err := d.RestoreSnapshot(nameOrID, snapShot)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -102,7 +102,7 @@ func VBoxSnapshotRestoreCurrent(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	nameOrID := vars["nameOrID"]
 
-	d := vbox.NewDriver("", "")
+	d := vbox.NewDriver(nameOrID, "")
 	outPut, err := d.RestoreCurrentSnapshot(nameOrID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

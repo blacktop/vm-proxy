@@ -336,6 +336,17 @@ func (d *Driver) StopVM(name string) (string, error) {
 }
 
 func (d *Driver) RestoreSnapshot(name string, snapshot string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
 	stdOut, err := d.vbmOut("snapshot", name, "restore", snapshot)
 	if err != nil {
 		return "", err
@@ -344,6 +355,17 @@ func (d *Driver) RestoreSnapshot(name string, snapshot string) (string, error) {
 }
 
 func (d *Driver) RestoreCurrentSnapshot(name string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
 	stdOut, err := d.vbmOut("snapshot", name, "restorecurrent")
 	if err != nil {
 		return "", err
