@@ -16,10 +16,11 @@ package cmd
 
 import (
 	"fmt"
-	"log"
+	"io/ioutil"
+	"net/http"
 
-	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // controlvmCmd represents the controlvm command
@@ -28,12 +29,35 @@ var controlvmCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `A longer description that spans multiple lines`,
 	Run: func(cmd *cobra.Command, args []string) {
-		d := virtualbox.NewDriver("", "")
-		outList, err := d.StopVM(args[0])
+		// d := virtualbox.NewDriver("", "")
+		// outList, err := d.StopVM(args[0])
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// fmt.Print(outList)
+		host := viper.GetString("server.host")
+		port := viper.GetString("server.port")
+
+		// Create client
+		client := &http.Client{}
+
+		// Create request
+		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/stop/"+args[0], nil)
+
+		// Fetch Request
+		resp, err := client.Do(req)
+
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println("Failure : ", err)
 		}
-		fmt.Print(outList)
+
+		// Read Response Body
+		respBody, _ := ioutil.ReadAll(resp.Body)
+
+		// Display Results
+		fmt.Println("response Status : ", resp.Status)
+		fmt.Println("response Headers : ", resp.Header)
+		fmt.Println("response Body : ", string(respBody))
 	},
 }
 

@@ -16,12 +16,9 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"strings"
 
-	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var projectBase string
@@ -32,27 +29,29 @@ var snapshotCmd = &cobra.Command{
 	Use:   "snapshot <uuid|vmname>",
 	Short: "Manage virtualbox snapshots",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			cmd.Help()
-			os.Exit(0)
-		}
-		d := virtualbox.NewDriver("", "")
-		if len(args) == 3 {
-			if strings.EqualFold("restore", args[1]) {
-				outList, err := d.Snapshot(args[0], args[2])
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Print(outList)
-			}
-		}
-		if strings.EqualFold("restorecurrent", args[1]) {
-			outList, err := d.Snapshot(args[0], "")
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Print(outList)
-		}
+		host := viper.GetString("server.host")
+		port := viper.GetString("server.port")
+		// if len(args) == 0 {
+		// 	cmd.Help()
+		// 	os.Exit(0)
+		// }
+		// d := virtualbox.NewDriver("", "")
+		// if len(args) == 3 {
+		// 	if strings.EqualFold("restore", args[1]) {
+		// 		outList, err := d.Snapshot(args[0], args[2])
+		// 		if err != nil {
+		// 			log.Fatal(err)
+		// 		}
+		// 		fmt.Print(outList)
+		// 	}
+		// }
+		// if strings.EqualFold("restorecurrent", args[1]) {
+		// 	outList, err := d.Snapshot(args[0], "")
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		// 	fmt.Print(outList)
+		// }
 	},
 }
 
@@ -97,7 +96,7 @@ Examples:
 
 Available Commands:{{range .Commands}}{{if .IsAvailableCommand}}
   {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableLocalFlags}}
-  
+
 Flags:
 {{.LocalFlags.FlagUsages | trimRightSpace}}{{end}}{{ if .HasAvailableInheritedFlags}}
 
@@ -106,7 +105,7 @@ Global Flags:
 
 Additional help topics:{{range .Commands}}{{if .IsHelpCommand}}
   {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableSubCommands }}
-  
+
 Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
 `
 	RootCmd.AddCommand(snapshotCmd)

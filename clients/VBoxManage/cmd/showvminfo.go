@@ -21,6 +21,7 @@ import (
 
 	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // showvminfoCmd represents the showvminfo command
@@ -28,6 +29,9 @@ var showvminfoCmd = &cobra.Command{
 	Use:   "showvminfo <uuid|vmname>",
 	Short: "Display VM info",
 	Run: func(cmd *cobra.Command, args []string) {
+		host := viper.GetString("server.host")
+		port := viper.GetString("server.port")
+
 		if len(args) == 0 {
 			cmd.Help()
 			os.Exit(0)

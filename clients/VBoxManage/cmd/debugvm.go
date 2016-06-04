@@ -16,12 +16,9 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"strings"
 
-	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // debugvmCmd represents the debugvm command
@@ -31,27 +28,30 @@ var debugvmCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// VBoxManage debugvm <LABEL> dumpvmcore --filename <PATH>
 		// VBoxManage debugvm <LABEL> dumpguestcore --filename <PATH>
-		if len(args) == 0 {
-			cmd.Help()
-			os.Exit(0)
-		}
-		d := virtualbox.NewDriver("", "")
-		if len(args) == 3 {
-			if strings.EqualFold("dumpvmcore", args[1]) {
-				outList, err := d.Snapshot(args[0], args[2])
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Print(outList)
-			}
-		}
-		if strings.EqualFold("dumpguestcore", args[1]) {
-			outList, err := d.Snapshot(args[0], "")
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Print(outList)
-		}
+		host := viper.GetString("server.host")
+		port := viper.GetString("server.port")
+
+		// if len(args) == 0 {
+		// 	cmd.Help()
+		// 	os.Exit(0)
+		// }
+		// d := virtualbox.NewDriver("", "")
+		// if len(args) == 3 {
+		// 	if strings.EqualFold("dumpvmcore", args[1]) {
+		// 		outList, err := d.Snapshot(args[0], args[2])
+		// 		if err != nil {
+		// 			log.Fatal(err)
+		// 		}
+		// 		fmt.Print(outList)
+		// 	}
+		// }
+		// if strings.EqualFold("dumpguestcore", args[1]) {
+		// 	outList, err := d.Snapshot(args[0], "")
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		// 	fmt.Print(outList)
+		// }
 	},
 }
 
