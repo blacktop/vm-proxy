@@ -19,6 +19,12 @@ var routes = Routes{
 		Index,
 	},
 	Route{
+		"VBoxVersion",
+		"GET",
+		"/virtualbox/version",
+		VBoxVersion,
+	},
+	Route{
 		"VBoxList",
 		"GET",
 		"/virtualbox/list",

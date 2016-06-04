@@ -16,6 +16,8 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -31,27 +33,21 @@ var snapshotCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
-		// if len(args) == 0 {
-		// 	cmd.Help()
-		// 	os.Exit(0)
-		// }
-		// d := virtualbox.NewDriver("", "")
-		// if len(args) == 3 {
-		// 	if strings.EqualFold("restore", args[1]) {
-		// 		outList, err := d.Snapshot(args[0], args[2])
-		// 		if err != nil {
-		// 			log.Fatal(err)
-		// 		}
-		// 		fmt.Print(outList)
-		// 	}
-		// }
-		// if strings.EqualFold("restorecurrent", args[1]) {
-		// 	outList, err := d.Snapshot(args[0], "")
-		// 	if err != nil {
-		// 		log.Fatal(err)
-		// 	}
-		// 	fmt.Print(outList)
-		// }
+		// Create client
+		client := &http.Client{}
+
+		// Create request
+		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/"+args[0]+"/restore/"+args[2], nil)
+
+		// Fetch Request
+		resp, err := client.Do(req)
+		assert(err)
+
+		// Read Response Body
+		respBody, _ := ioutil.ReadAll(resp.Body)
+
+		// Display Results
+		fmt.Print(string(respBody))
 	},
 }
 

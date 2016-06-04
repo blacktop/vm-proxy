@@ -16,10 +16,11 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
-	"github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -39,12 +40,26 @@ All rights reserved.`,
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
-			d := virtualbox.NewDriver("", "")
-			outList, err := d.Version()
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Print(outList)
+			host := viper.GetString("server.host")
+			port := viper.GetString("server.port")
+			// Create client
+			client := &http.Client{}
+
+			// Create request
+			req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/version", nil)
+
+			// Fetch Request
+			resp, err := client.Do(req)
+			assert(err)
+
+			// Read Response Body
+			respBody, _ := ioutil.ReadAll(resp.Body)
+
+			// Display Results
+			// fmt.Println("response Status : ", resp.Status)
+			// fmt.Println("response Headers : ", resp.Header)
+			// fmt.Println("response Body : ", string(respBody))
+			fmt.Print(string(respBody))
 		} else {
 			cmd.Help()
 			os.Exit(0)
@@ -58,6 +73,12 @@ func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
+	}
+}
+
+func assert(err error) {
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 

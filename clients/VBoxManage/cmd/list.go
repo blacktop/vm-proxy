@@ -45,19 +45,13 @@ var listCmd = &cobra.Command{
 
 		// Fetch Request
 		resp, err := client.Do(req)
-
-		if err != nil {
-			fmt.Println("Failure : ", err)
-		}
+		assert(err)
 
 		// Read Response Body
 		respBody, _ := ioutil.ReadAll(resp.Body)
 
 		// Display Results
-		// fmt.Println("response Status : ", resp.Status)
-		// fmt.Println("response Headers : ", resp.Header)
-		// fmt.Println("response Body : ", string(respBody))
-		fmt.Println(string(respBody))
+		fmt.Print(string(respBody))
 	},
 }
 

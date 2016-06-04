@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // debugvmCmd represents the debugvm command
@@ -28,8 +27,9 @@ var debugvmCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// VBoxManage debugvm <LABEL> dumpvmcore --filename <PATH>
 		// VBoxManage debugvm <LABEL> dumpguestcore --filename <PATH>
-		host := viper.GetString("server.host")
-		port := viper.GetString("server.port")
+
+		// host := viper.GetString("server.host")
+		// port := viper.GetString("server.port")
 
 		// if len(args) == 0 {
 		// 	cmd.Help()

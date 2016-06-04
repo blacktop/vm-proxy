@@ -311,7 +311,7 @@ func (d *Driver) Status(name string) (string, error) {
 	return stdOut, nil
 }
 
-func (d *Driver) List() (string, error) {
+func (d *Driver) ListVMs() (string, error) {
 	stdOut, err := d.vbmOut("list", "vms")
 	if err != nil {
 		return "", err
