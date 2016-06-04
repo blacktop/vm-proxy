@@ -27,3 +27,5 @@ _testmain.go
 debug
 
 server/server
+clients/VBoxManage/VBoxManage
+clients/vmrun/vmrun
