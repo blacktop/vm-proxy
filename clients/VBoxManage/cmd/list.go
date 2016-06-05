@@ -26,7 +26,7 @@ import (
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "list all VMs",
+	Short: "List all VMs",
 	Run: func(cmd *cobra.Command, args []string) {
 		// d := virtualbox.NewDriver("", "")
 		// outList, err := d.List()

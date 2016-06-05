@@ -60,4 +60,16 @@ var routes = Routes{
 		"/virtualbox/snapshot/{nameOrID}/restore/{snapShot}",
 		VBoxSnapshotRestore,
 	},
+	Route{
+		"VBoxNicTraceFile",
+		"GET",
+		"/virtualbox/nictracefile1/{nameOrID}/{fileName}",
+		VBoxNicTraceFile,
+	},
+	Route{
+		"VBoxNicTrace",
+		"GET",
+		"/virtualbox/nictrace1/{nameOrID}/{stateOnOff}",
+		VBoxNicTrace,
+	},
 }

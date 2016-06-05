@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -25,10 +26,16 @@ import (
 
 // controlvmCmd represents the controlvm command
 var controlvmCmd = &cobra.Command{
-	Use:   "controlvm",
-	Short: "A brief description of your command",
-	Long:  `A longer description that spans multiple lines`,
+	Use:   "controlvm  <uuid|vmname>",
+	Short: "Control VM",
 	Run: func(cmd *cobra.Command, args []string) {
+		var req *http.Request
+		var err error
+
+		if len(args) < 2 {
+			cmd.Help()
+			os.Exit(0)
+		}
 
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
@@ -37,22 +44,69 @@ var controlvmCmd = &cobra.Command{
 		client := &http.Client{}
 
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/stop/"+args[0], nil)
+		switch args[1] {
+		case "poweroff":
+			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/stop/"+args[0], nil)
+			assert(err)
+		case "nictracefile1":
+			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			assert(err)
+		case "nictrace1":
+			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			assert(err)
+		}
 
-		// Fetch Request
-		resp, err := client.Do(req)
-		assert(err)
+		if req != nil {
+			// Fetch Request
+			resp, err := client.Do(req)
+			assert(err)
 
-		// Read Response Body
-		respBody, _ := ioutil.ReadAll(resp.Body)
+			// Read Response Body
+			respBody, _ := ioutil.ReadAll(resp.Body)
 
-		// Display Results
-		fmt.Print(string(respBody))
+			// Display Results
+			fmt.Print(string(respBody))
+		} else {
+			cmd.Help()
+			os.Exit(1)
+		}
+	},
+}
+
+var poweroffCmd = &cobra.Command{
+	Use:   "poweroff",
+	Short: "Power off VM",
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
+}
+
+var nictracefile1Cmd = &cobra.Command{
+	Use:   "nictracefile1 <filename>",
+	Short: "Write pcap to file",
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
+}
+
+var nictrace1Cmd = &cobra.Command{
+	Use:   "nictrace1 <on|off>",
+	Short: "Start/Stop pcap capture",
+	Run: func(cmd *cobra.Command, args []string) {
+
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(controlvmCmd)
+	controlvmCmd.AddCommand(poweroffCmd)
+	controlvmCmd.AddCommand(nictracefile1Cmd)
+	controlvmCmd.AddCommand(nictrace1Cmd)
+
+	controlvmCmd.SetUsageTemplate(controlvmTmplt)
+	// poweroffCmd.SetUsageTemplate(snapshotTmplt)
+	// nictracefile1Cmd.SetUsageTemplate(snapshotTmplt)
+	// nictrace1Cmd.SetUsageTemplate(restoreCurrentTmplt)
 
 	// Here you will define your flags and configuration settings.
 

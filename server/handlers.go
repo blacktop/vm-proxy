@@ -102,13 +102,14 @@ func VBoxStop(w http.ResponseWriter, r *http.Request) {
 	nameOrID := vars["nameOrID"]
 
 	d := vbox.NewDriver(nameOrID, "")
-	err := d.Stop()
+	outPut, err := d.StopVM()
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
-
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
 }
 
 // VBoxSnapshotRestore restores a certain snapshot
@@ -139,6 +140,44 @@ func VBoxSnapshotRestoreCurrent(w http.ResponseWriter, r *http.Request) {
 
 	d := vbox.NewDriver(nameOrID, "")
 	outPut, err := d.RestoreCurrentSnapshot(nameOrID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
+}
+
+// VBoxNicTrace restores a certain snapshot
+func VBoxNicTrace(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+
+	vars := mux.Vars(r)
+	nameOrID := vars["nameOrID"]
+	stateOnOff := vars["stateOnOff"]
+
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.NicTrace(stateOnOff)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
+}
+
+// VBoxNicTraceFile restores the most resent snapshot
+func VBoxNicTraceFile(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+
+	vars := mux.Vars(r)
+	nameOrID := vars["nameOrID"]
+	fileName := vars["fileName"]
+
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.NicTraceFile(fileName)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

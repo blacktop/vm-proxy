@@ -327,8 +327,8 @@ func (d *Driver) StartVM(mode string) (string, error) {
 	return stdOut, nil
 }
 
-func (d *Driver) StopVM(name string) (string, error) {
-	stdOut, err := d.vbmOut("controlvm", name, "poweroff")
+func (d *Driver) StopVM() (string, error) {
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "poweroff")
 	if err != nil {
 		return "", err
 	}
@@ -367,6 +367,46 @@ func (d *Driver) RestoreCurrentSnapshot(name string) (string, error) {
 		}
 	}
 	stdOut, err := d.vbmOut("snapshot", name, "restorecurrent")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// NicTrace start a pcap capture
+func (d *Driver) NicTrace(stateOnOff string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "nictrace1", stateOnOff)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// NicTraceFile writes pcap to file
+func (d *Driver) NicTraceFile(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "nictracefile1", fileName)
 	if err != nil {
 		return "", err
 	}
