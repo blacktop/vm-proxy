@@ -27,7 +27,7 @@ import (
 // snapshotCmd represents the snapshot command
 var snapshotCmd = &cobra.Command{
 	Use:   "snapshot <uuid|vmname>",
-	Short: "Manage virtualbox snapshots",
+	Short: "Manage VirtualBox Snapshots",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		var req *http.Request
@@ -81,41 +81,19 @@ var restoreCmd = &cobra.Command{
 
 var restorecurrentCmd = &cobra.Command{
 	Use:   "restorecurrent",
-	Short: "A brief description of your command",
+	Short: "Restore most recent snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
 
 	},
 }
 
 func init() {
-	tmplt := `Usage:{{if .Runnable}}
-  {{if .HasAvailableFlags}}{{appendIfNotPresent .UseLine ""}}{{else}}{{.UseLine}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
-  {{ .CommandPath}} <uuid|vmname> [command]{{end}}{{if gt .Aliases 0}}
-Aliases:
-  {{.NameAndAliases}}
-{{end}}{{if .HasExample}}
-
-Examples:
-{{ .Example }}{{end}}{{ if .HasAvailableSubCommands}}
-
-Available Commands:{{range .Commands}}{{if .IsAvailableCommand}}
-  {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableLocalFlags}}
-
-Flags:
-{{.LocalFlags.FlagUsages | trimRightSpace}}{{end}}{{ if .HasAvailableInheritedFlags}}
-
-Global Flags:
-{{.InheritedFlags.FlagUsages | trimRightSpace}}{{end}}{{if .HasHelpSubCommands}}
-
-Additional help topics:{{range .Commands}}{{if .IsHelpCommand}}
-  {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{ if .HasAvailableSubCommands }}
-
-Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
-`
 	RootCmd.AddCommand(snapshotCmd)
 	snapshotCmd.AddCommand(restoreCmd)
 	snapshotCmd.AddCommand(restorecurrentCmd)
-	snapshotCmd.SetUsageTemplate(tmplt)
+	snapshotCmd.SetUsageTemplate(snapshotTmplt)
+	restoreCmd.SetUsageTemplate(restoreTmplt)
+	restorecurrentCmd.SetUsageTemplate(restoreCurrentTmplt)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
