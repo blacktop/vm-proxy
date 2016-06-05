@@ -10,15 +10,13 @@
 
 #### Install:
  - [Docker for Mac](https://beta.docker.com/)
- - [jq](https://stedolan.github.io/jq/)  
+ - [homebrew](http://brew.sh/)  
 
 #### Now run:
 Start `vm-proxy-server`
 ```bash
-$ go get -v github.com/docker/machine
-$ go get -v github.com/blacktop/vm-proxy
-$ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
-$ go run *.go &
+$ brew install https://raw.githubusercontent.com/blacktop/vm-proxy/master/homebrew/Formula/vm-proxy-server.rb
+$ vm-proxy-server
 ```
 To list all VirtualBox VMs
 ```bash
