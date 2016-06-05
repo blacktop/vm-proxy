@@ -3,7 +3,7 @@ FROM gliderlabs/alpine:3.3
 MAINTAINER blacktop, https://github.com/blacktop
 
 COPY . /go/src/github.com/blacktop/vm-proxy/clients/VBoxManage
-COPY .VBoxManage.yaml ~
+COPY .VBoxManage.yaml /root
 RUN apk-install -t build-deps go git mercurial \
   && set -x \
   && echo "Building info Go binary..." \

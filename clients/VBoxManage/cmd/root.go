@@ -105,8 +105,8 @@ func initConfig() {
 	viper.AddConfigPath("$HOME")       // adding home directory as first search path
 	viper.AutomaticEnv()               // read in environment variables that match
 
-	viper.SetDefault("server.host", "localhost") // Set default host for vm-proxy server
-	viper.SetDefault("server.port", 5000)        // Set default port for vm-proxy server
+	viper.SetDefault("server.host", "dockerhost") // Set default host for vm-proxy server
+	viper.SetDefault("server.port", 5000)         // Set default port for vm-proxy server
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
