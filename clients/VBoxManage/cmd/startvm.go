@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -29,18 +30,35 @@ var Type string
 // startvmCmd represents the startvm command
 var startvmCmd = &cobra.Command{
 	Use:   "startvm",
-	Short: "A brief description of your command",
-	Long:  `A longer description that spans multiple lines`,
+	Short: "Start VMs",
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if len(args) < 1 {
+			cmd.Help()
+			os.Exit(0)
+		}
+
+		var startType string
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
 
 		// Create client
 		client := &http.Client{}
 
+		switch Type {
+		case "gui":
+			startType = Type
+		case "headless":
+			startType = Type
+		case "separate":
+			startType = Type
+		default:
+			startType = "headless"
+		}
+
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/start/"+args[0], nil)
+		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/start/"+args[0]+"/"+startType, nil)
+		assert(err)
 
 		// Fetch Request
 		resp, err := client.Do(req)
@@ -56,7 +74,7 @@ var startvmCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(startvmCmd)
-	startvmCmd.PersistentFlags().StringVarP(&Type, "type", "", "", "gui|headless|separate")
+	startvmCmd.PersistentFlags().StringVarP(&Type, "type", "", "headless", "gui|headless|separate")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

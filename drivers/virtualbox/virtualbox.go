@@ -319,8 +319,8 @@ func (d *Driver) ListVMs() (string, error) {
 	return stdOut, nil
 }
 
-func (d *Driver) StartVM(name string, mode string) (string, error) {
-	stdOut, err := d.vbmOut("startvm", name, "--type", mode)
+func (d *Driver) StartVM(mode string) (string, error) {
+	stdOut, err := d.vbmOut("startvm", d.MachineName, "--type", mode)
 	if err != nil {
 		return "", err
 	}

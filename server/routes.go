@@ -39,7 +39,7 @@ var routes = Routes{
 	Route{
 		"VBoxStart",
 		"GET",
-		"/virtualbox/start/{nameOrID}",
+		"/virtualbox/start/{nameOrID}/{startType}",
 		VBoxStart,
 	},
 	Route{

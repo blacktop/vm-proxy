@@ -81,12 +81,17 @@ func VBoxStart(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	nameOrID := vars["nameOrID"]
+	startType := vars["startType"]
 
-	machine, err := virtualbox.GetMachine(nameOrID)
-	assert(err)
-	assert(machine.Start())
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.StartVM(startType)
 
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
 }
 
 // VBoxStop router stops a VM
