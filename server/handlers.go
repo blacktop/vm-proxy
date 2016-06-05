@@ -186,3 +186,41 @@ func VBoxNicTraceFile(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(outPut))
 }
+
+// VBoxDumpVM perform a memory core dump (VirtualBox version 5.x)
+func VBoxDumpVM(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+
+	vars := mux.Vars(r)
+	nameOrID := vars["nameOrID"]
+	fileName := vars["fileName"]
+
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.DumpVM(fileName)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
+}
+
+// VBoxDumpGuest perform a memory core dump (VirtualBox version 4.x)
+func VBoxDumpGuest(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+
+	vars := mux.Vars(r)
+	nameOrID := vars["nameOrID"]
+	fileName := vars["fileName"]
+
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.DumpGuest(fileName)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
+}

@@ -72,4 +72,16 @@ var routes = Routes{
 		"/virtualbox/nictrace1/{nameOrID}/{stateOnOff}",
 		VBoxNicTrace,
 	},
+	Route{
+		"VBoxDumpVM",
+		"GET",
+		"/virtualbox/debugvm/{nameOrID}/{fileName}",
+		VBoxDumpVM,
+	},
+	Route{
+		"VBoxDumpGuest",
+		"GET",
+		"/virtualbox/debugvm/{nameOrID}/{fileName}",
+		VBoxDumpGuest,
+	},
 }

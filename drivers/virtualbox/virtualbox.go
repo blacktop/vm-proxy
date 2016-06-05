@@ -413,6 +413,44 @@ func (d *Driver) NicTraceFile(fileName string) (string, error) {
 	return stdOut, nil
 }
 
+// DumpVM writes memory dump to file (VirtualBox version 5.x)
+func (d *Driver) DumpVM(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("debugvm", d.MachineName, "dumpvmcore", "--filename", fileName)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// DumpGuest writes memory dump to file (VirtualBox version 4.x)
+func (d *Driver) DumpGuest(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("debugvm", d.MachineName, "dumpguestcore", "--filename", fileName)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
 func (d *Driver) Create() error {
 	if err := d.CreateVM(); err != nil {
 		return err
