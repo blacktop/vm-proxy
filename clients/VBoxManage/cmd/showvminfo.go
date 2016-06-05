@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -28,13 +29,15 @@ var showvminfoCmd = &cobra.Command{
 	Use:   "showvminfo <uuid|vmname>",
 	Short: "Display VM info",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		if len(args) == 0 {
+			cmd.Help()
+			os.Exit(0)
+		}
+
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
 
-		// if len(args) == 0 {
-		// 	cmd.Help()
-		// 	os.Exit(0)
-		// }
 		// d := virtualbox.NewDriver("", "")
 		// outList, err := d.Status(args[0])
 		// if err != nil {

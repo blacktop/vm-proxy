@@ -32,6 +32,7 @@ var startvmCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `A longer description that spans multiple lines`,
 	Run: func(cmd *cobra.Command, args []string) {
+
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
 

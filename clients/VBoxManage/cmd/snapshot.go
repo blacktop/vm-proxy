@@ -18,36 +18,56 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
-
-var projectBase string
-var userLicense string
 
 // snapshotCmd represents the snapshot command
 var snapshotCmd = &cobra.Command{
 	Use:   "snapshot <uuid|vmname>",
 	Short: "Manage virtualbox snapshots",
 	Run: func(cmd *cobra.Command, args []string) {
+
+		var req *http.Request
+		var err error
+
+		if len(args) < 2 {
+			cmd.Help()
+			os.Exit(0)
+		}
+
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
+
 		// Create client
 		client := &http.Client{}
 
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/"+args[0]+"/restore/"+args[2], nil)
+		switch args[1] {
+		case "restore":
+			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/"+args[0]+"/restore/"+args[2], nil)
+			assert(err)
+		case "restorecurrent":
+			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			assert(err)
+		}
 
-		// Fetch Request
-		resp, err := client.Do(req)
-		assert(err)
+		if req != nil {
+			// Fetch Request
+			resp, err := client.Do(req)
+			assert(err)
 
-		// Read Response Body
-		respBody, _ := ioutil.ReadAll(resp.Body)
+			// Read Response Body
+			respBody, _ := ioutil.ReadAll(resp.Body)
 
-		// Display Results
-		fmt.Print(string(respBody))
+			// Display Results
+			fmt.Print(string(respBody))
+		} else {
+			cmd.Help()
+			os.Exit(1)
+		}
 	},
 }
 
@@ -55,13 +75,7 @@ var restoreCmd = &cobra.Command{
 	Use:   "restore <uuid|snapname>",
 	Short: "Restore snapshot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
-		// d := virtualbox.NewDriver("", "")
-		// outList, err := d.Snapshot(args[0], args[2])
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// fmt.Print(outList)
+
 	},
 }
 
@@ -69,13 +83,7 @@ var restorecurrentCmd = &cobra.Command{
 	Use:   "restorecurrent",
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
-		// d := virtualbox.NewDriver("", "")
-		// outList, err := d.Snapshot(args[0], "")
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// fmt.Print(outList)
+
 	},
 }
 

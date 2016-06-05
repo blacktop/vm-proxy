@@ -34,6 +34,7 @@ var listCmd = &cobra.Command{
 		// 	log.Fatal(err)
 		// }
 		// fmt.Print(outList)
+
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
 
