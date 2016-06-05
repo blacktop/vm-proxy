@@ -303,8 +303,8 @@ func (d *Driver) DebugVM(name string, dmpcmd string, path string) (string, error
 	return stdOut, nil
 }
 
-func (d *Driver) Status(name string) (string, error) {
-	stdOut, err := d.vbmOut("showvminfo", name, "--machinereadable")
+func (d *Driver) Status() (string, error) {
+	stdOut, err := d.vbmOut("showvminfo", d.MachineName, "--machinereadable")
 	if err != nil {
 		return "", err
 	}

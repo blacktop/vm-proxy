@@ -1,13 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	vbox "github.com/blacktop/vm-proxy/drivers/virtualbox"
 	"github.com/gorilla/mux"
-	"github.com/riobard/go-virtualbox"
 )
 
 type jsonErr struct {
@@ -26,11 +24,11 @@ func VBoxVersion(w http.ResponseWriter, r *http.Request) {
 
 	d := vbox.NewDriver("", "")
 	outPut, err := d.Version()
+
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
-
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(outPut))
 }
@@ -54,25 +52,32 @@ func VBoxList(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
-
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(outPut))
 }
 
 // VBoxStatus displays the machine readable status of a VM
 func VBoxStatus(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
+	// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	vars := mux.Vars(r)
 	nameOrID := vars["nameOrID"]
 
-	machine, err := virtualbox.GetMachine(nameOrID)
-	assert(err)
-	if err := json.NewEncoder(w).Encode(machine.State); err != nil {
-		panic(err)
-	}
+	// machine, err := virtualbox.GetMachine(nameOrID)
+	// assert(err)
+	// if err := json.NewEncoder(w).Encode(machine.State); err != nil {
+	// 	panic(err)
+	// }
 
+	d := vbox.NewDriver(nameOrID, "")
+	outPut, err := d.Status()
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
 	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(outPut))
 }
 
 // VBoxStart router starts a VM
