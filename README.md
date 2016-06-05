@@ -35,10 +35,15 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 ### Downloads
 I will be releasing binaries of **VBoxManage** and **vmrun** soon.
 
+### Docker Images
+VBoxManage
+```bash
+$ docker pull blacktop/vbox
+```
+
 ### ToDo
  - [ ] Add version check to debugvm calls
  - [ ] vmrun
  - [ ] create homebrew installer for vm-proxy-server
- - [ ] build small base images with VBoxManage in them
+ - [x] build small base images with VBoxManage in them
  - [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)  
- 
