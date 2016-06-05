@@ -19,11 +19,15 @@ $ go get -v github.com/blacktop/vm-proxy
 $ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
 $ go run *.go &
 # To list all VirtualBox VMs
-$ LOCAL=$(ipconfig getifaddr en0)
-$ docker run --rm --add-host=dockerhost:$LOCAL alpine \
-            wget -qO- dockerhost:5000/virtualbox/list \
-            | jq .
+$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) vbox list vms
 ```
 
 ### Downloads
 I will be releasing binaries of **VBoxManage** and **vmrun** soon.
+
+### ToDo
+ - [ ] Add version check to debugvm calls
+ - [ ] vmrun
+ - [ ] create homebrew installer for vm-proxy-server
+ - [ ] build small base images with VBoxManage in them
+ - [ ] figure out filesystem translation for dropping PCAP or memory dumps so comtainer can see them (using volumes?)
