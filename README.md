@@ -19,7 +19,7 @@ $ go get -v github.com/blacktop/vm-proxy
 $ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
 $ go run *.go &
 # To list all VirtualBox VMs
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) vbox list vms
+$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
 ```
 
 ### Downloads
