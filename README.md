@@ -13,14 +13,14 @@
  - [jq](https://stedolan.github.io/jq/)  
 
 #### Now run:
-To Start `vm-proxy-server`
+Start `vm-proxy-server`
 ```bash
 $ go get -v github.com/docker/machine
 $ go get -v github.com/blacktop/vm-proxy
 $ cd $GOPATH/src/github.com/blacktop/vm-proxy/server
 $ go run *.go &
 ```
-Now To list all VirtualBox VMs
+To list all VirtualBox VMs
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
 ```
