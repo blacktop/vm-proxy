@@ -30,6 +30,8 @@ class VmProxyServer < Formula
 
     Language::Go.stage_deps resources, gopath/"src"
 
+    (var/"log/vm-proxy-server").mkpath
+
     cd gopath/"src/github.com/blacktop/vm-proxy/server" do
       system "go", "get", "-v"
       system "go", "build", "-o", bin/"vm-proxy-server"
@@ -41,28 +43,23 @@ class VmProxyServer < Formula
 
   def plist; <<-EOS.undent
     <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>ProgramArguments</key>
-      <array>
-          <string>#{opt_bin}/vm-proxy-server</string>
-      </array>
-      <key>WorkingDirectory</key>
-      <string>#{HOMEBREW_PREFIX}</string>
-      <key>StandardOutPath</key>
-      <string>#{var}/log/vm-proxy-server/vm-proxy-server.log</string>
-      <key>StandardErrorPath</key>
-      <string>#{var}/log/vm-proxy-server/vm-proxy-server.log</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>KeepAlive</key>
-      <true/>
-    </dict>
+      <dict>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>Program</key>
+        <string>#{opt_bin}/vm-proxy-server</string>
+        <key>StandardOutPath</key>
+        <string>#{var}/log/vm-proxy-server/vm-proxy-server.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/log/vm-proxy-server/vm-proxy-server.log</string>
+        <key>RunAtLoad</key>
+        <true/>
+      </dict>
     </plist>
-    EOS
+  EOS
   end
 
   test do
