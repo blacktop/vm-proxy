@@ -18,6 +18,33 @@ Start `vm-proxy-server`
 $ brew install https://raw.githubusercontent.com/blacktop/vm-proxy/master/homebrew/Formula/vm-proxy-server.rb
 $ vm-proxy-server
 ```
+Show Help
+```bash
+$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
+```
+```bash
+Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
+(C) 2005-2016 Oracle Corporation
+All rights reserved.
+
+Usage:
+  VBoxManage [flags]
+  VBoxManage [command]
+
+Available Commands:
+  controlvm   Control VM
+  debugvm     Introspection and guest debugging
+  list        List all VMs
+  showvminfo  Display VM info
+  snapshot    Manage VirtualBox Snapshots
+  startvm     Start VMs
+
+Flags:
+      --config string   config file (default is $HOME/.VBoxManage.yaml)
+  -v, --version         print version number and exit
+
+Use "VBoxManage [command] --help" for more information about a command.
+```
 To list all VirtualBox VMs
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
