@@ -1138,7 +1138,8 @@ func detectVBoxManageCmdInPath() string {
 	if path, err := exec.LookPath(cmd); err == nil {
 		return path
 	}
-	return cmd
+	return "/usr/local/bin/VBoxManage"
+	// return cmd
 }
 
 func (d *Driver) readVBoxLog() ([]string, error) {

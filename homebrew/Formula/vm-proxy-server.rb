@@ -51,6 +51,8 @@ class VmProxyServer < Formula
         <string>#{plist_name}</string>
         <key>Program</key>
         <string>#{opt_bin}/vm-proxy-server</string>
+        <key>WorkingDirectory</key>
+        <string>#{HOMEBREW_PREFIX}</string>
         <key>StandardOutPath</key>
         <string>#{var}/log/vm-proxy-server/vm-proxy-server.log</string>
         <key>StandardErrorPath</key>
