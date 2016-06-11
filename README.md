@@ -1,27 +1,32 @@
-# vm-proxy
-![License][license]  
+vm-proxy
+========
+
+![License](https://img.shields.io/github/license/blacktop/vm-proxy.svg)
 
 **VBoxManage/vmrun** proxy to allow communication from within a VM to the hypervisor running the VM.
-
-[godoc]: https://godoc.org/github.com/blacktop/vm-proxy?status.svg
-[license]: https://img.shields.io/github/license/blacktop/vm-proxy.svg
 
 ### Getting Started (OSX)
 
 #### Install:
- - [Docker for Mac](https://beta.docker.com/)
- - [homebrew](http://brew.sh/)  
+
+-	[Docker for Mac](https://beta.docker.com/)
+-	[homebrew](http://brew.sh/)  
 
 #### Now run:
+
 Start `vm-proxy-server`
+
 ```bash
 $ brew install https://raw.githubusercontent.com/blacktop/vm-proxy/master/homebrew/Formula/vm-proxy-server.rb
 $ vm-proxy-server
 ```
+
 Show Help
+
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
 ```
+
 ```bash
 Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
 (C) 2005-2016 Oracle Corporation
@@ -45,10 +50,13 @@ Flags:
 
 Use "VBoxManage [command] --help" for more information about a command.
 ```
+
 To list all VirtualBox VMs
+
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
 ```
+
 ```bash
 "win-test_default_1456716033001_71487" {f11be617-b053-4a0f-b22c-59887290ec96}
 "malice_dev" {cdb35dc9-31f6-469f-aebf-6f69830f7864}
@@ -58,17 +66,21 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 ```
 
 ### Downloads
+
 I will be releasing binaries of **VBoxManage** and **vmrun** soon.
 
 ### Docker Images
+
 VBoxManage
+
 ```bash
 $ docker pull blacktop/vbox
 ```
 
 ### ToDo
- - [ ] Add version check to debugvm calls
- - [ ] vmrun
- - [x] create homebrew installer for vm-proxy-server
- - [x] build small base images with VBoxManage in them
- - [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)  
+
+-	[ ] Add version check to debugvm calls
+-	[ ] vmrun
+-	[x] create homebrew installer for vm-proxy-server
+-	[x] build small base images with VBoxManage in them
+-	[ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)  
