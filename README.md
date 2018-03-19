@@ -61,6 +61,12 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
 ```
 
+### Start `vm-proxy` brew service
+
+```sh
+$ brew services start blacktop/tap/vm-proxy
+```
+
 ### Start `VirtualBox` client within Docker
 
 ```sh
