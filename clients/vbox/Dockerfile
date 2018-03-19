@@ -14,7 +14,7 @@ RUN wget --progress=bar:force -O hack/build/vars https://github.com/blacktop/vm-
 RUN wget --progress=bar:force -O hack/build/bin https://github.com/blacktop/vm-proxy/raw/master/hack/build/bin
 RUN chmod +x hack/build/*
 
-RUN hack/build/bin
+RUN CLIENT=vbox hack/build/bin
 
 #############################################
 ## [vbox image] ###########################
