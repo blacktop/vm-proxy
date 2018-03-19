@@ -44,3 +44,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/kabukky/httpscerts"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/mitchellh/go-homedir"

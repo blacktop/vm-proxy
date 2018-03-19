@@ -7,7 +7,10 @@
 ## Getting Started
 
 ```sh
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vbox --help
 
 Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
 (C) 2005-2016 Oracle Corporation

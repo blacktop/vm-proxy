@@ -70,7 +70,10 @@ $ brew services start blacktop/tap/vm-proxy
 ### Start `VirtualBox` client within Docker
 
 ```sh
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vbox --help
 
 Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
 (C) 2005-2016 Oracle Corporation
@@ -98,7 +101,10 @@ Use "VBoxManage [command] --help" for more information about a command.
 #### List `VirtualBox` VMs
 
 ```sh
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vbox list vms
 
 "win-test_default_1456716033001_71487" {f11be617-b053-4a0f-b22c-59887290ec96}
 "malice_dev" {cdb35dc9-31f6-469f-aebf-6f69830f7864}

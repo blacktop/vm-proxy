@@ -99,6 +99,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
+
+[[projects]]
+  branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "00c29f56e2386353d58c599509e8dc3801b0d716"
@@ -206,6 +212,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7d02c89887d8c54970a37d5876554b255b64d0aca22b8f92d3c21d8505b5b786"
+  inputs-digest = "95fd78453d362324c6907dfad9e223b06abb9c53b650e98e2201a1356b02cc32"
   solver-name = "gps-cdcl"
   solver-version = 1
