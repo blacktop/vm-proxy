@@ -86,6 +86,10 @@ $ docker pull blacktop/vbox
 * [x] build small base images with VBoxManage in them
 * [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
 
+## Issues
+
+Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/blacktop/vm-proxy/issues/new)
+
 ## License
 
-Apache License (Version 2.0) Copyright (c) 2013 - 2018 **blacktop**
+Apache License (Version 2.0) Copyright (c) 2016 - 2018 **blacktop**
