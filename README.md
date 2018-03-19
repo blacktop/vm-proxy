@@ -6,7 +6,7 @@
 
 ---
 
-## Install (macOS)
+## Install _(macOS)_
 
 ```sh
 $ brew install blacktop/tap/vm-proxy
@@ -14,19 +14,10 @@ $ brew install blacktop/tap/vm-proxy
 
 ## Client Docker Images
 
-VirtualBox
+* blacktop/vbox
+* blacktop/vmware
 
-```sh
-docker pull blacktop/vbox
-```
-
-VMware
-
-```sh
-docker pull blacktop/vmware
-```
-
-## Getting Started (macOS)
+## Getting Started _(macOS)_
 
 ```sh
 $ vm-proxy --help
@@ -58,7 +49,7 @@ Commands:
 Run 'vm-proxy COMMAND --help' for more information on a command.
 ```
 
-### Start **vm-proxy** server:
+### Start `vm-proxy` server
 
 ```sh
 $ vm-proxy
@@ -70,7 +61,7 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
 ```
 
-### Start **VirtualBox** client within Docker:
+### Start `VirtualBox` client within Docker
 
 ```sh
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
@@ -112,7 +103,7 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 
 ### API
 
-#### List VirtualBox VMs (via API)
+#### List VirtualBox VMs _(via API)_
 
 ```sh
  $ http --verify=no https://127.0.0.1:3993/vbox/list
