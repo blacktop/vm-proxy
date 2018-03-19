@@ -6,23 +6,72 @@
 
 ---
 
-## Getting Started (OSX)
+## Install (macOS)
 
-### Install:
-
-* [Docker for Mac](https://beta.docker.com/)
-* [homebrew](http://brew.sh/)
-
-### Now run:
-
-Start `vm-proxy-server`
-
-```bash
-$ brew install https://raw.githubusercontent.com/blacktop/vm-proxy/master/homebrew/Formula/vm-proxy-server.rb
-$ vm-proxy-server
+```sh
+$ brew install blacktop/tap/vm-proxy
 ```
 
-Show Help
+## `vm-proxy` Client Docker Images
+
+VirtualBox
+
+```bash
+$ docker pull blacktop/vbox
+```
+
+
+```bash
+$ docker pull blacktop/vmware
+```
+
+## Getting Started (OSX)
+
+```sh
+$ vm-proxy --help
+```
+
+```sh
+Usage: vm-proxy [OPTIONS] COMMAND [arg...]
+
+VMProxy Server - allows hypervisors to be controlled from docker containers
+
+Version: , BuildTime:
+
+Author:
+  blacktop - <https://github.com/blacktop>
+
+Options:
+  --verbose, -V  verbose output
+  --host value   microservice host (default: "127.0.0.1") [$VMPROXY_HOST]
+  --port value   microservice port (default: "3993") [$VMPROXY_PORT]
+  --token value  webhook token [$VMPROXY_TOKEN]
+  --help, -h     show help
+  --version, -v  print the version
+
+Commands:
+  update  Update images
+  export  Export Database
+  help    Shows a list of commands or help for one command
+
+Run 'vm-proxy COMMAND --help' for more information on a command.
+```
+
+Start **vm-proxy** server:
+
+```bash
+$ vm-proxy
+```
+
+```sh
+WARN[0000] no webhook token set: --token
+2018/03/19 15:58:04 written cert.pem
+2018/03/19 15:58:04 written key.pem
+INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=3993 token=
+2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
+```
+
+Start **vm-proxy** server:
 
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
@@ -52,7 +101,7 @@ Flags:
 Use "VBoxManage [command] --help" for more information about a command.
 ```
 
-To list all VirtualBox VMs
+List VirtualBox VMs
 
 ```bash
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
@@ -66,16 +115,21 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 "default" {6e94d53e-5f78-4366-9aa8-a5725ac6dbfb}
 ```
 
-## Downloads
+### API
 
-I will be releasing binaries of **VBoxManage** and **vmrun** soon.
-
-## Docker Images
-
-VBoxManage
+List VirtualBox VMs
 
 ```bash
-$ docker pull blacktop/vbox
+ $ http --verify=no https://127.0.0.1:3993/vbox/list
+```
+
+```bash
+HTTP/1.1 500 Internal Server Error
+Content-Length: 85
+Content-Type: application/json; charset=UTF-8
+Date: Mon, 19 Mar 2018 22:03:43 GMT
+
+VBoxManage not found. Make sure VirtualBox is installed and VBoxManage is in the path
 ```
 
 ## TODO
@@ -85,7 +139,7 @@ $ docker pull blacktop/vbox
 * [x] create homebrew installer for vm-proxy-server
 * [x] build small base images with VBoxManage in them
 * [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
-* [ ] auto-create certs on first run
+* [x] auto-create certs on first run
 
 ## Issues
 
