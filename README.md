@@ -1,18 +1,19 @@
-vm-proxy
-========
+# vm-proxy
 
-![License](https://img.shields.io/github/license/blacktop/vm-proxy.svg)
+[![Circle CI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![GitHub release](https://img.shields.io/github/release/blacktop/vm-proxy.svg)](https://github.com/https://github.com/blacktop/vm-proxy/releases/releases) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE)
 
-**VBoxManage/vmrun** proxy to allow communication from within a VM to the hypervisor running the VM.
+> **VBoxManage/vmrun** proxy to allow communication from within a VM to the hypervisor running the VM.
 
-### Getting Started (OSX)
+---
 
-#### Install:
+## Getting Started (OSX)
 
--	[Docker for Mac](https://beta.docker.com/)
--	[homebrew](http://brew.sh/)  
+### Install:
 
-#### Now run:
+* [Docker for Mac](https://beta.docker.com/)
+* [homebrew](http://brew.sh/)
+
+### Now run:
 
 Start `vm-proxy-server`
 
@@ -65,11 +66,11 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 "default" {6e94d53e-5f78-4366-9aa8-a5725ac6dbfb}
 ```
 
-### Downloads
+## Downloads
 
 I will be releasing binaries of **VBoxManage** and **vmrun** soon.
 
-### Docker Images
+## Docker Images
 
 VBoxManage
 
@@ -77,10 +78,14 @@ VBoxManage
 $ docker pull blacktop/vbox
 ```
 
-### ToDo
+## ToDo
 
--	[ ] Add version check to debugvm calls
--	[ ] vmrun
--	[x] create homebrew installer for vm-proxy-server
--	[x] build small base images with VBoxManage in them
--	[ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)  
+* [ ] Add version check to debugvm calls
+* [ ] vmrun
+* [x] create homebrew installer for vm-proxy-server
+* [x] build small base images with VBoxManage in them
+* [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
+
+## License
+
+Apache License (Version 2.0) Copyright (c) 2013 - 2018 **blacktop**
