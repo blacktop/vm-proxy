@@ -9,6 +9,7 @@ ARG GITCOMMIT
 COPY . /go/src/github.com/blacktop/vm-proxy/clients/vmware
 WORKDIR /go/src/github.com/blacktop/vm-proxy/clients/vmware/
 
+RUN mkdir -p hack/build
 RUN wget --progress=bar:force -O hack/build/vars https://github.com/blacktop/vm-proxy/raw/master/hack/build/vars
 RUN wget --progress=bar:force -O hack/build/bin https://github.com/blacktop/vm-proxy/raw/master/hack/build/bin
 RUN chmod +x hack/build/*
