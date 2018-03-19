@@ -78,13 +78,14 @@ VBoxManage
 $ docker pull blacktop/vbox
 ```
 
-## ToDo
+## TODO
 
 * [ ] Add version check to debugvm calls
 * [ ] vmrun
 * [x] create homebrew installer for vm-proxy-server
 * [x] build small base images with VBoxManage in them
 * [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
+* [ ] auto-create certs on first run
 
 ## Issues
 
