@@ -17,9 +17,9 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/blacktop/vm-proxy/server
+    working_directory: /go/src/github.com/blacktop/vm-proxy
     steps:
       - checkout
       - setup_remote_docker
       # specify any bash command here prefixed with `run: `
-      - run: go run *.go --help
+      - run: go run server/*.go --help

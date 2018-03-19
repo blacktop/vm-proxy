@@ -89,7 +89,7 @@ Flags:
 Use "VBoxManage [command] --help" for more information about a command.
 ```
 
-### List VirtualBox VMs
+#### List `VirtualBox` VMs
 
 ```sh
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
@@ -103,7 +103,7 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 
 ### API
 
-#### List VirtualBox VMs _(via API)_
+#### List `VirtualBox` VMs _(via API)_
 
 ```sh
  $ http --verify=no https://127.0.0.1:3993/vbox/list
