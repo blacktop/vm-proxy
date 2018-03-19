@@ -29,3 +29,4 @@ debug
 server/server
 clients/VBoxManage/VBoxManage
 clients/vmrun/vmrun
+dist/
