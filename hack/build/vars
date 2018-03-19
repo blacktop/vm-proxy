@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -eu
+
+: "${CLIENT:?Need to set CLIENT}"
+VERSION=${VERSION:-"unknown-version"}
+GITCOMMIT=${GITCOMMIT:-$(git rev-parse --short HEAD 2> /dev/null || true)}
+BUILDTIME=${BUILDTIME:-$(date --utc --rfc-3339 ns 2> /dev/null | sed -e 's/ /T/')}
+
+export LDFLAGS="\
+    -s \
+    -w \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.GitCommit=${GITCOMMIT} \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.BuildTime=${BUILDTIME} \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.Version=${VERSION} \
+    ${LDFLAGS:-} \
+"
+echo "$LDFLAGS"
+GOOS="${GOOS:-$(go env GOHOSTOS)}"
+GOARCH="${GOARCH:-$(go env GOHOSTARCH)}"
+export TARGET="build/${CLIENT}-$GOOS-$GOARCH"
+export SOURCE="github.com/blacktop/vm-proxy/clients/${CLIENT}"

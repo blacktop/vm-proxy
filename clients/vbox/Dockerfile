@@ -7,8 +7,12 @@ ARG VERSION
 ARG GITCOMMIT
 
 COPY . /go/src/github.com/blacktop/vm-proxy/clients/vbox
+WORKDIR /go/src/github.com/blacktop/vm-proxy/clients/vbox/
 
-RUN hack/build/binary
+RUN wget --progress=bar:force -O hack/build/vars
+RUN wget --progress=bar:force -O hack/build/bin
+
+RUN hack/build/bin
 
 #############################################
 ## [vbox image] ###########################

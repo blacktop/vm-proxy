@@ -53,17 +53,11 @@ lint: ## Run all the linters
 		./...
 		markdownfmt -w README.md
 
+.PHONY: release
 release: ## Create a new release from the VERSION
 	@echo "===> Creating Release"
-	git tag -a ${VERSION} -m ${MESSAGE}
-	git push origin ${VERSION}
-	goreleaser --rm-dist
-
-destroy: ## Remove release from the VERSION
-	@echo "===> Deleting Release"
-	rm -rf dist
-	git tag -d ${VERSION}
-	git push origin :refs/tags/${VERSION}
+	@hack/make/release ${VERSION}
+	@goreleaser --rm-dist
 
 ci: lint test ## Run all the tests and code checks
 
