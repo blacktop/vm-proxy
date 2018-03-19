@@ -16,14 +16,14 @@ $ brew install blacktop/tap/vm-proxy
 
 VirtualBox
 
-```bash
-$ docker pull blacktop/vbox
+```sh
+docker pull blacktop/vbox
 ```
 
 VMware
 
-```bash
-$ docker pull blacktop/vmware
+```sh
+docker pull blacktop/vmware
 ```
 
 ## Getting Started (macOS)
@@ -58,13 +58,11 @@ Commands:
 Run 'vm-proxy COMMAND --help' for more information on a command.
 ```
 
-Start **vm-proxy** server:
-
-```bash
-$ vm-proxy
-```
+### Start **vm-proxy** server:
 
 ```sh
+$ vm-proxy
+
 WARN[0000] no webhook token set: --token
 2018/03/19 15:58:04 written cert.pem
 2018/03/19 15:58:04 written key.pem
@@ -72,13 +70,11 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
 ```
 
-Start **vm-proxy** server:
+### Start **VirtualBox** client within Docker:
 
-```bash
+```sh
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox --help
-```
 
-```bash
 Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
 (C) 2005-2016 Oracle Corporation
 All rights reserved.
@@ -102,13 +98,11 @@ Flags:
 Use "VBoxManage [command] --help" for more information about a command.
 ```
 
-List VirtualBox VMs
+### List VirtualBox VMs
 
-```bash
+```sh
 $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox list vms
-```
 
-```bash
 "win-test_default_1456716033001_71487" {f11be617-b053-4a0f-b22c-59887290ec96}
 "malice_dev" {cdb35dc9-31f6-469f-aebf-6f69830f7864}
 "vagrant-golang-master_default_1458098432288_42734" {8bca67fa-03b9-45dd-9436-53f1877e1608}
@@ -118,13 +112,13 @@ $ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vbox 
 
 ### API
 
-List VirtualBox VMs
+#### List VirtualBox VMs (via API)
 
-```bash
+```sh
  $ http --verify=no https://127.0.0.1:3993/vbox/list
 ```
 
-```bash
+```http
 HTTP/1.1 500 Internal Server Error
 Content-Length: 85
 Content-Type: application/json; charset=UTF-8
