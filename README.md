@@ -1,4 +1,4 @@
-# vm-proxy
+# vm-proxy [WIP] :construction:
 
 [![Circle CI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![GitHub release](https://img.shields.io/github/release/blacktop/vm-proxy.svg)](https://github.com/https://github.com/blacktop/vm-proxy/releases/releases) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE)
 
@@ -12,7 +12,7 @@
 $ brew install blacktop/tap/vm-proxy
 ```
 
-## `vm-proxy` Client Docker Images
+## Client Docker Images
 
 VirtualBox
 
@@ -20,12 +20,13 @@ VirtualBox
 $ docker pull blacktop/vbox
 ```
 
+VMware
 
 ```bash
 $ docker pull blacktop/vmware
 ```
 
-## Getting Started (OSX)
+## Getting Started (macOS)
 
 ```sh
 $ vm-proxy --help
