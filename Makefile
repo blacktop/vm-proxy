@@ -26,6 +26,10 @@ setup: ## Install all the build and lint dependencies
 test: ## Run all the tests
 	gotestcover $(TEST_OPTIONS) -covermode=atomic -coverprofile=coverage.txt $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=30s
 
+.PHONY: test.release
+test.release: ## Run all the tests
+	 goreleaser release --rm-dist --skip-publish --skip-validate
+
 cover: test ## Run all the tests and opens the coverage report
 	go tool cover -html=coverage.txt
 
