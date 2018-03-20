@@ -6,15 +6,11 @@ FROM golang:1.10 as builder
 ARG VERSION
 ARG GITCOMMIT
 
-COPY . /go/src/github.com/blacktop/vm-proxy/clients/vmware
-WORKDIR /go/src/github.com/blacktop/vm-proxy/clients/vmware/
+RUN go get github.com/blacktop/vm-proxy/...
 
-RUN mkdir -p hack/build
-RUN wget --progress=bar:force -O hack/build/vars https://github.com/blacktop/vm-proxy/raw/master/hack/build/vars
-RUN wget --progress=bar:force -O hack/build/bin https://github.com/blacktop/vm-proxy/raw/master/hack/build/bin
-RUN chmod +x hack/build/*
+WORKDIR /go/src/github.com/blacktop/vm-proxy/
 
-RUN CLIENT=vmware hack/build/bin
+RUN VERSION=$(cat VERSION) CLIENT=vbox hack/build/bin
 
 #############################################
 ## [vmware image] ###########################
