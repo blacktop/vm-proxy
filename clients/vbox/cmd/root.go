@@ -22,9 +22,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/user"
 	"path/filepath"
 
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -47,13 +48,12 @@ All rights reserved.`,
 			host := viper.GetString("server.host")
 			port := viper.GetString("server.port")
 			// Create client
-			usr, err := user.Current()
+			home, err := homedir.Dir()
 			if err != nil {
-				log.Fatal(err)
+				log.Fatal(errors.Wrap(err, "could not detect users home directory"))
 			}
-
 			// Create client
-			caCert, err := ioutil.ReadFile(filepath.Join(usr.HomeDir, ".vmproxy", "cert.pem"))
+			caCert, err := ioutil.ReadFile(filepath.Join(home, ".vmproxy", "cert.pem"))
 			if err != nil {
 				log.Fatal(err)
 			}
