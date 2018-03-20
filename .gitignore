@@ -26,8 +26,10 @@ _testmain.go
 .vscode
 debug
 
+vm-proxy
 server/server
-clients/VBoxManage/VBoxManage
-clients/vmrun/vmrun
+clients/vbox/vbox
+clients/vmware/vmware
 dist/
 *.pem
+
