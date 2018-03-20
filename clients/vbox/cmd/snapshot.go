@@ -15,10 +15,15 @@
 package cmd
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
+	"os/user"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -42,7 +47,32 @@ var snapshotCmd = &cobra.Command{
 		port := viper.GetString("server.port")
 
 		// Create client
-		client := &http.Client{}
+		usr, err := user.Current()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Create client
+		caCert, err := ioutil.ReadFile(filepath.Join(usr.HomeDir, ".vmproxy", "cert.pem"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		// cert, err := tls.LoadX509KeyPair("client.crt", "client.key")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		client := &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: caCertPool,
+					// Certificates: []tls.Certificate{cert},
+				},
+			},
+		}
 
 		// Create request
 		switch args[1] {
