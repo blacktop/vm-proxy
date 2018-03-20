@@ -68,6 +68,8 @@ WARN[0000] no webhook token set: --token
 INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=3993 token=
 ```
 
+## Use a Hypervisor Client
+
 ### Start `VirtualBox` client within Docker
 
 > See docs [here](https://github.com/blacktop/vm-proxy/blob/master/clients/vbox/README.md)
@@ -76,7 +78,7 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 
 > See docs [here](https://github.com/blacktop/vm-proxy/blob/master/clients/vmware/README.md)
 
-### API
+## API
 
 > See docs [here](https://github.com/blacktop/vm-proxy/blob/master/docs/api.md)
 
