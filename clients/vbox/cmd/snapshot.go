@@ -77,10 +77,10 @@ var snapshotCmd = &cobra.Command{
 		// Create request
 		switch args[1] {
 		case "restore":
-			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/"+args[0]+"/restore/"+args[2], nil)
+			req, err = http.NewRequest("GET", "https://"+host+":"+port+"/vbox/snapshot/"+args[0]+"/restore/"+args[2], nil)
 			assert(err)
 		case "restorecurrent":
-			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			req, err = http.NewRequest("GET", "https://"+host+":"+port+"/vbox/snapshot/restorecurrent/"+args[0], nil)
 			assert(err)
 		}
 

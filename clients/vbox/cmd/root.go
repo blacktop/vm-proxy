@@ -75,7 +75,7 @@ All rights reserved.`,
 			}
 
 			// Create request
-			req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/version", nil)
+			req, err := http.NewRequest("GET", "https://"+host+":"+port+"/vbox/version", nil)
 
 			// Fetch Request
 			resp, err := client.Do(req)

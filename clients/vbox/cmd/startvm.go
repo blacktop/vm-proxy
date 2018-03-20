@@ -87,7 +87,7 @@ var startvmCmd = &cobra.Command{
 		}
 
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/start/"+args[0]+"/"+startType, nil)
+		req, err := http.NewRequest("GET", "https://"+host+":"+port+"/vbox/start/"+args[0]+"/"+startType, nil)
 		assert(err)
 
 		// Fetch Request

@@ -79,7 +79,7 @@ var showvminfoCmd = &cobra.Command{
 		}
 
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/status/default", nil)
+		req, err := http.NewRequest("GET", "https://"+host+":"+port+"/vbox/status/default", nil)
 
 		// Fetch Request
 		resp, err := client.Do(req)

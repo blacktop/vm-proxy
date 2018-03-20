@@ -76,13 +76,13 @@ var controlvmCmd = &cobra.Command{
 		// Create request
 		switch args[1] {
 		case "poweroff":
-			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/stop/"+args[0], nil)
+			req, err = http.NewRequest("GET", "https://"+host+":"+port+"/vbox/stop/"+args[0], nil)
 			assert(err)
 		case "nictracefile1":
-			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			req, err = http.NewRequest("GET", "https://"+host+":"+port+"/vbox/snapshot/restorecurrent/"+args[0], nil)
 			assert(err)
 		case "nictrace1":
-			req, err = http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/snapshot/restorecurrent/"+args[0], nil)
+			req, err = http.NewRequest("GET", "https://"+host+":"+port+"/vbox/snapshot/restorecurrent/"+args[0], nil)
 			assert(err)
 		}
 
