@@ -76,6 +76,7 @@ ssh.vbox: ## Build a beta version of vbox client
 	docker run -it --rm --entrypoint=sh $(REPO)/vbox:dev
 
 clean: ## Clean up artifacts
+	@rm -rf $(HOME)/.vmproxy || true
 	@rm -rf dist/ || true
 	@rm vm-proxy || true
 
