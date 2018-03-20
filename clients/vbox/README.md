@@ -35,6 +35,21 @@ Flags:
 Use "VBoxManage [command] --help" for more information about a command.
 ```
 
+### List `VirtualBox` VMs
+
+```sh
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vbox list vms
+
+"win-test_default_1456716033001_71487" {f11be617-b053-4a0f-b22c-59887290ec96}
+"malice_dev" {cdb35dc9-31f6-469f-aebf-6f69830f7864}
+"vagrant-golang-master_default_1458098432288_42734" {8bca67fa-03b9-45dd-9436-53f1877e1608}
+"go-malice-test_default_1458098825435_9154" {208244e8-b320-41a8-b037-7127cbc9d09d}
+"default" {6e94d53e-5f78-4366-9aa8-a5725ac6dbfb}
+```
+
 ## Issues
 
 Find a bug? Want more features? Find something missing in the documentation? Let me know! Please don't hesitate to [file an issue](https://github.com/blacktop/vm-proxy/issues/new)

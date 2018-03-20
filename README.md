@@ -6,18 +6,26 @@
 
 ---
 
-## Install _(macOS)_
-
-```sh
-$ brew install blacktop/tap/vm-proxy
-```
-
 ## Client Docker Images
 
 * blacktop/vbox
 * blacktop/vmware
 
 ## Getting Started _(macOS)_
+
+### Install
+
+```sh
+$ brew install blacktop/tap/vm-proxy
+```
+
+### Start `vm-proxy` brew service
+
+```sh
+$ brew services start blacktop/tap/vm-proxy
+```
+
+### Start `vm-proxy` server
 
 ```sh
 $ vm-proxy --help
@@ -61,74 +69,17 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
 ```
 
-### Start `vm-proxy` brew service
-
-```sh
-$ brew services start blacktop/tap/vm-proxy
-```
-
 ### Start `VirtualBox` client within Docker
 
-```sh
-$ docker run --rm \
-             --add-host=dockerhost:$(ipconfig getifaddr en0) \
-             -v $HOME/.vmproxy:/root/.vmproxy \
-             blacktop/vbox --help
+See docs [here](https://github.com/blacktop/vm-proxy/blob/master/clients/vbox/README.md)
 
-Oracle VM VirtualBox Command Line Management Interface Version 5.0.20
-(C) 2005-2016 Oracle Corporation
-All rights reserved.
+### Start `VMware` client within Docker
 
-Usage:
-  VBoxManage [flags]
-  VBoxManage [command]
-
-Available Commands:
-  controlvm   Control VM
-  debugvm     Introspection and guest debugging
-  list        List all VMs
-  showvminfo  Display VM info
-  snapshot    Manage VirtualBox Snapshots
-  startvm     Start VMs
-
-Flags:
-      --config string   config file (default is $HOME/.VBoxManage.yaml)
-  -v, --version         print version number and exit
-
-Use "VBoxManage [command] --help" for more information about a command.
-```
-
-#### List `VirtualBox` VMs
-
-```sh
-$ docker run --rm \
-             --add-host=dockerhost:$(ipconfig getifaddr en0) \
-             -v $HOME/.vmproxy:/root/.vmproxy \
-             blacktop/vbox list vms
-
-"win-test_default_1456716033001_71487" {f11be617-b053-4a0f-b22c-59887290ec96}
-"malice_dev" {cdb35dc9-31f6-469f-aebf-6f69830f7864}
-"vagrant-golang-master_default_1458098432288_42734" {8bca67fa-03b9-45dd-9436-53f1877e1608}
-"go-malice-test_default_1458098825435_9154" {208244e8-b320-41a8-b037-7127cbc9d09d}
-"default" {6e94d53e-5f78-4366-9aa8-a5725ac6dbfb}
-```
+See docs [here](https://github.com/blacktop/vm-proxy/blob/master/clients/vmware/README.md)
 
 ### API
 
-#### List `VirtualBox` VMs _(via API)_
-
-```sh
- $ http --verify=no https://127.0.0.1:3993/vbox/list
-```
-
-```http
-HTTP/1.1 500 Internal Server Error
-Content-Length: 85
-Content-Type: application/json; charset=UTF-8
-Date: Mon, 19 Mar 2018 22:03:43 GMT
-
-VBoxManage not found. Make sure VirtualBox is installed and VBoxManage is in the path
-```
+See docs [here](https://github.com/blacktop/vm-proxy/blob/master/docs/api.md)
 
 ## TODO
 
