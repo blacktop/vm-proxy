@@ -6,7 +6,7 @@ FROM golang:1.10 as builder
 ARG VERSION
 ARG GITCOMMIT
 
-RUN apk add --no-cache build-base git mercurial
+RUN apk add --no-cache build-base git mercurial bash
 RUN go get github.com/blacktop/vm-proxy/...
 
 WORKDIR /go/src/github.com/blacktop/vm-proxy/

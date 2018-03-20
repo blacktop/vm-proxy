@@ -1,17 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Build a static binary for the host OS/ARCH
 #
 
 set -eu -o pipefail
 
+echo "Sourcing vars..."
 source ./hack/build/vars
 
-echo "Downloading golang deps"
+echo "Downloading golang deps..."
 cd /go/src/"${SOURCE}"
 go get -v -d
 
-echo "Building statically linked $TARGET"
+echo "Building statically linked $TARGET..."
 CGO_ENABLED=0 go build -buildmode=pie -i -o "${TARGET}" -ldflags="${LDFLAGS}" "${SOURCE}"
 
 mv "${TARGET}" build/${CLIENT}
