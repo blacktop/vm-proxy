@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/blacktop/vm-proxy/clients/vmrun/cmd"
+import "github.com/blacktop/vm-proxy/clients/vmware/cmd"
 
 var (
 	Version   = "unknown-version"

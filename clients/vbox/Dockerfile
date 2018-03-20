@@ -6,7 +6,8 @@ FROM golang:1.10 as builder
 ARG VERSION
 ARG GITCOMMIT
 
-RUN go get github.com/blacktop/vm-proxy
+RUN go get github.com/blacktop/vm-proxy/...
+
 WORKDIR /go/src/github.com/blacktop/vm-proxy/
 
 RUN VERSION=$(cat VERSION) CLIENT=vbox hack/build/bin

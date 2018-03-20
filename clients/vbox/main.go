@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/blacktop/vm-proxy/clients/VBoxManage/cmd"
+import "github.com/blacktop/vm-proxy/clients/vbox/cmd"
 
 var (
 	Version   = "unknown-version"
