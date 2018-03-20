@@ -63,7 +63,7 @@ ci: lint test ## Run all the tests and code checks
 
 build: ## Build a beta version of vm-proxy
 	@echo "===> Building Binaries"
-	CGO_ENABLED=0 go build -buildmode=pie -i -o $(NAME) -a -installsuffix cgo -ldflags="-w -s" server/*.go
+	CGO_ENABLED=0 go build -buildmode=pie -i -o $(NAME) -ldflags="-w -s" server/*.go
 
 .PHONY: build.vbox
 build.vbox: ## Build a beta version of vbox client

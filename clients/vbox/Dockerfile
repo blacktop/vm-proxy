@@ -1,7 +1,7 @@
 #############################################
 ## [golang builder]  ########################
 #############################################
-FROM golang:1.10 as builder
+FROM golang:alpine as builder
 
 ARG VERSION
 ARG GITCOMMIT
