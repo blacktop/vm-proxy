@@ -22,4 +22,6 @@ jobs:
       - checkout
       - setup_remote_docker
       # specify any bash command here prefixed with `run: `
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
       - run: go run server/*.go --help

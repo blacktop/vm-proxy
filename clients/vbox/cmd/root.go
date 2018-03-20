@@ -118,7 +118,7 @@ func init() {
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
 
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.VBoxManage.yaml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.vbox.yaml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolVarP(&version, "version", "v", false, "print version number and exit")
@@ -135,7 +135,7 @@ func initConfig() {
 	viper.AutomaticEnv()         // read in environment variables that match
 
 	viper.SetDefault("server.host", "dockerhost") // Set default host for vm-proxy server
-	viper.SetDefault("server.port", 5000)         // Set default port for vm-proxy server
+	viper.SetDefault("server.port", 3993)         // Set default port for vm-proxy server
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
