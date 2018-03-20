@@ -19,13 +19,13 @@
 $ brew install blacktop/tap/vm-proxy
 ```
 
-### Start `vm-proxy` brew service
+### Start `vm-proxy` brew background service
 
 ```sh
 $ brew services start blacktop/tap/vm-proxy
 ```
 
-### Start `vm-proxy` server
+### Manually run `vm-proxy` server
 
 ```sh
 $ vm-proxy --help
@@ -57,7 +57,7 @@ Commands:
 Run 'vm-proxy COMMAND --help' for more information on a command.
 ```
 
-### Start `vm-proxy` server
+### Manually start `vm-proxy` server
 
 ```sh
 $ vm-proxy
@@ -66,7 +66,6 @@ WARN[0000] no webhook token set: --token
 2018/03/19 15:58:04 written cert.pem
 2018/03/19 15:58:04 written key.pem
 INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=3993 token=
-2018/03/19 15:58:43 http: TLS handshake error from 127.0.0.1:64801: EOF
 ```
 
 ### Start `VirtualBox` client within Docker
