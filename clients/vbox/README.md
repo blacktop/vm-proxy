@@ -1,3 +1,5 @@
+![vbox-logo](https://github.com/blacktop/vm-proxy/raw/master/docs/vbox-logo.png)
+
 # blacktop/vbox
 
 > VirtualBox Client for `vm-proxy`
