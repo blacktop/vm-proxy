@@ -1,3 +1,5 @@
+![vmware-logo](https://github.com/blacktop/vm-proxy/raw/master/docs/vmware-logo.png)
+
 # blacktop/vmware
 
 > VMware Client for `vm-proxy`
