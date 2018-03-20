@@ -65,6 +65,11 @@ build: ## Build a beta version of vm-proxy
 	@echo "===> Building Binaries"
 	CGO_ENABLED=0 go build -buildmode=pie -i -o $(NAME) -a -installsuffix cgo -ldflags="-w -s" server/*.go
 
+.PHONY: build.vbox
+build.vbox: ## Build a beta version of vbox client
+	@echo "===> Building vbox client"
+	docker build -t $(REPO)/vbox:dev clients/vbox/
+
 clean: ## Clean up artifacts
 	@rm -rf dist/ || true
 	@rm vm-proxy || true

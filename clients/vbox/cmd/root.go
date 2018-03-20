@@ -101,9 +101,9 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	}
 
-	viper.SetConfigName(".VBoxManage") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")       // adding home directory as first search path
-	viper.AutomaticEnv()               // read in environment variables that match
+	viper.SetConfigName(".vbox") // name of config file (without extension)
+	viper.AddConfigPath("$HOME") // adding home directory as first search path
+	viper.AutomaticEnv()         // read in environment variables that match
 
 	viper.SetDefault("server.host", "dockerhost") // Set default host for vm-proxy server
 	viper.SetDefault("server.port", 5000)         // Set default port for vm-proxy server

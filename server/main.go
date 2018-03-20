@@ -14,15 +14,17 @@ import (
 )
 
 var (
-	// Version stores the plugin's version
+	// Version stores the server's version
 	Version string
-	// BuildTime stores the plugin's build time
+	// BuildTime stores the server's build time
 	BuildTime string
-	// Token stores the webhook api token
+	// GitCommit stores server's gitcommit
+	GitCommit string
+	// Token stores the server api token
 	Token string
-	// Host microservice host
+	// Host server host
 	Host string
-	// Port microservice port
+	// Port server port
 	Port string
 )
 

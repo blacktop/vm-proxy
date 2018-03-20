@@ -15,9 +15,9 @@ builds:
     ldflags: |-
       -s
       -w
-      -X github.com/blacktop/vm-proxy/server/version.Version={{.Version}}
-      -X github.com/blacktop/vm-proxy/server/version.BuildTime={{.Date}}
-      -X github.com/blacktop/vm-proxy/server/version.GitCommit={{.Commit}}
+      -X github.com/blacktop/vm-proxy/server/Version={{.Version}}
+      -X github.com/blacktop/vm-proxy/server/BuildTime={{.Date}}
+      -X github.com/blacktop/vm-proxy/server/GitCommit={{.Commit}}
 
 archive:
   format: tar.gz

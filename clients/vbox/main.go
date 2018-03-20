@@ -16,6 +16,12 @@ package main
 
 import "github.com/blacktop/vm-proxy/clients/VBoxManage/cmd"
 
+var (
+	Version   = "unknown-version"
+	GitCommit = "unknown-commit"
+	BuildTime = "unknown-buildtime"
+)
+
 func main() {
 	cmd.Execute()
 	// doc.GenMarkdownTree(cmd.RootCmd, "./")

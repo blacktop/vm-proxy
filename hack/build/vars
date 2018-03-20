@@ -9,9 +9,9 @@ BUILDTIME=${BUILDTIME:-$(date --utc --rfc-3339 ns 2> /dev/null | sed -e 's/ /T/'
 export LDFLAGS="\
     -s \
     -w \
-    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.GitCommit=${GITCOMMIT} \
-    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.BuildTime=${BUILDTIME} \
-    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/version.Version=${VERSION} \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/GitCommit=${GITCOMMIT} \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/BuildTime=${BUILDTIME} \
+    -X github.com/blacktop/vm-proxy/clients/${CLIENT}/Version=${VERSION} \
     ${LDFLAGS:-} \
 "
 echo "$LDFLAGS"

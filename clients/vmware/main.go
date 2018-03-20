@@ -16,6 +16,12 @@ package main
 
 import "github.com/blacktop/vm-proxy/clients/vmrun/cmd"
 
+var (
+	Version   = "unknown-version"
+	GitCommit = "unknown-commit"
+	BuildTime = "unknown-buildtime"
+)
+
 func main() {
 	cmd.Execute()
 }
