@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 
 	"github.com/kabukky/httpscerts"
@@ -10,9 +11,14 @@ import (
 
 // GenerateCerts generates SSL certs for vm-proxy server
 func GenerateCerts(host string) error {
+
 	home, err := homedir.Dir()
 	if err != nil {
 		return errors.Wrap(err, "could not detect users home directory")
+	}
+
+	if _, err := os.Stat(filepath.Join(home, ".vmproxy")); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(home, ".vmproxy"), os.ModePerm)
 	}
 
 	certPath := filepath.Join(home, ".vmproxy", "cert.pem")
