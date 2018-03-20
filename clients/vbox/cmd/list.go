@@ -71,7 +71,7 @@ var listCmd = &cobra.Command{
 		}
 
 		// Create request
-		req, err := http.NewRequest("GET", "http://"+host+":"+port+"/virtualbox/list", nil)
+		req, err := http.NewRequest("GET", "https://"+host+":"+port+"/virtualbox/list", nil)
 
 		// Fetch Request
 		resp, err := client.Do(req)
