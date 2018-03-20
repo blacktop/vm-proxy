@@ -70,6 +70,11 @@ build.vbox: ## Build a beta version of vbox client
 	@echo "===> Building vbox client"
 	docker build -t $(REPO)/vbox:dev clients/vbox/
 
+.PHONY: ssh.vbox
+ssh.vbox: ## Build a beta version of vbox client
+	@echo "===> sshing into vbox client"
+	docker run -it --rm --entrypoint=sh $(REPO)/vbox:dev
+
 clean: ## Clean up artifacts
 	@rm -rf dist/ || true
 	@rm vm-proxy || true

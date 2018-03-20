@@ -14,4 +14,4 @@ go get -v -d
 echo "Building statically linked $TARGET"
 go build -buildmode=pie -i -o "${TARGET}" -a -installsuffix cgo -ldflags="${LDFLAGS}" "${SOURCE}"
 
-ln -sf "$(basename "${TARGET}")" build/${CLIENT}
+mv "$(basename "${TARGET}")" build/${CLIENT}
