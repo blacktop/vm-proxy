@@ -1,13 +1,12 @@
 #############################################
 ## [golang builder]  ########################
 #############################################
-FROM golang:1.10 as builder
+FROM golang as builder
 
 ARG VERSION
 ARG GITCOMMIT
 
-RUN apk add --no-cache build-base git mercurial bash
-RUN go get github.com/blacktop/vm-proxy/...
+RUN go get -d github.com/blacktop/vm-proxy/...
 
 WORKDIR /go/src/github.com/blacktop/vm-proxy/
 
