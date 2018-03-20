@@ -10,7 +10,7 @@ RUN go get github.com/blacktop/vm-proxy/...
 
 WORKDIR /go/src/github.com/blacktop/vm-proxy/
 
-RUN VERSION=$(cat VERSION) CLIENT=vbox hack/build/bin
+RUN VERSION=$(cat VERSION) CLIENT=vmware hack/build/bin
 
 #############################################
 ## [vmware image] ###########################
