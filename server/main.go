@@ -68,7 +68,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:        "host",
-			Value:       "127.0.0.1",
+			Value:       "dockerhost",
 			Usage:       "vm-proxy server host",
 			EnvVar:      "VMPROXY_HOST",
 			Destination: &Host,
