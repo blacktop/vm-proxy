@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -10,6 +11,8 @@ import (
 	"github.com/blacktop/vm-proxy/server/vmware"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 )
 
@@ -134,8 +137,15 @@ func main() {
 			"token": Token,
 		}).Info("vm-proxy service listening")
 
+		home, err := homedir.Dir()
+		if err != nil {
+			return errors.Wrap(err, "could not detect users home directory")
+		}
+		certPath := filepath.Join(home, ".vmproxy", "cert.pem")
+		keyPath := filepath.Join(home, ".vmproxy", "key.pem")
+
 		loggedRouter := handlers.LoggingHandler(os.Stdout, router)
-		log.Fatal(http.ListenAndServeTLS(":"+Port, "cert.pem", "key.pem", loggedRouter))
+		log.Fatal(http.ListenAndServeTLS(":"+Port, certPath, keyPath, loggedRouter))
 
 		return nil
 	}
