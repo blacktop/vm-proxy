@@ -125,7 +125,7 @@ func main() {
 		router.HandleFunc("/vmware/list", vmware.List).Methods("GET")
 		// router.HandleFunc("/vmware/{source:(?:giphy|xkcd|dilbert|default|contrib)}/{file}", updateImageKeywords).Methods("PATCH")
 
-		err := GenerateCerts(Host + ":" + Port)
+		err := GenerateCerts("dockerhost")
 		if err != nil {
 			log.Fatal(err)
 		}
