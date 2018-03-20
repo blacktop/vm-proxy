@@ -20,7 +20,7 @@ FROM alpine:3.7
 LABEL maintainer "https://github.com/blacktop"
 
 COPY --from=builder /go/src/github.com/blacktop/vm-proxy/clients/vbox/build/vbox /bin/VBoxManage
-COPY .vbox.yaml /root
+COPY vbox.yaml /root/.vbox.yaml
 
 ENTRYPOINT ["/bin/VBoxManage"]
 CMD ["--help"]

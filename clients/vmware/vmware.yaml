@@ -1,0 +1,3 @@
+server:
+  host: "dockerhost"
+  port: 3993
