@@ -36,6 +36,9 @@ changelog:
       - '^small'
       - add a TODO
       - update README
+      - bump VERSION
+      - fixes
+      - updates
   sort: asc
 
 sign:
