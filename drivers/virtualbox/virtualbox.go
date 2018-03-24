@@ -228,6 +228,9 @@ func (d *Driver) GetURL() (string, error) {
 }
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
+	if drivers.EngineInstallURLFlagSet(flags) {
+		return errors.New("--engine-install-url cannot be used with the virtualbox driver, use --virtualbox-boot2docker-url instead")
+	}
 	d.CPU = flags.Int("virtualbox-cpu-count")
 	d.Memory = flags.Int("virtualbox-memory")
 	d.DiskSize = flags.Int("virtualbox-disk-size")
@@ -285,6 +288,193 @@ func (d *Driver) PreCreateCheck() error {
 	}
 
 	return nil
+}
+
+func (d *Driver) Version() (string, error) {
+	stdOut, err := d.vbmOut("--version")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) VersionCheck() error {
+	// Check that VBoxManage exists and works
+	version, err := d.vbmOut("--version")
+	if err != nil {
+		return err
+	}
+
+	// Check that VBoxManage is of a supported version
+	if err = checkVBoxManageVersion(strings.TrimSpace(version)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) DebugVM(name string, dmpcmd string, path string) (string, error) {
+	// VBoxManage debugvm <LABEL> dumpvmcore --filename <PATH>
+	// VBoxManage debugvm <LABEL> dumpguestcore --filename <PATH>
+	if strings.EqualFold(dmpcmd, "dumpvmcore") {
+		stdOut, err := d.vbmOut("debugvm", name, "dumpvmcore", "--filename", path)
+		if err != nil {
+			return "", err
+		}
+		return stdOut, nil
+	}
+	stdOut, err := d.vbmOut("debugvm", name, "dumpguestcore", "--filename", path)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) Status() (string, error) {
+	stdOut, err := d.vbmOut("showvminfo", d.MachineName, "--machinereadable")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) ListVMs() (string, error) {
+	stdOut, err := d.vbmOut("list", "vms")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) StartVM(mode string) (string, error) {
+	stdOut, err := d.vbmOut("startvm", d.MachineName, "--type", mode)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) StopVM() (string, error) {
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "poweroff")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) RestoreSnapshot(name string, snapshot string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("snapshot", name, "restore", snapshot)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+func (d *Driver) RestoreCurrentSnapshot(name string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("snapshot", name, "restorecurrent")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// NicTrace start a pcap capture
+func (d *Driver) NicTrace(stateOnOff string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "nictrace1", stateOnOff)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// NicTraceFile writes pcap to file
+func (d *Driver) NicTraceFile(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	// fmt.Println("driver.GetState: ", s)
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("controlvm", d.MachineName, "nictracefile1", fileName)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// DumpVM writes memory dump to file (VirtualBox version 5.x)
+func (d *Driver) DumpVM(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("debugvm", d.MachineName, "dumpvmcore", "--filename", fileName)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
+}
+
+// DumpGuest writes memory dump to file (VirtualBox version 4.x)
+func (d *Driver) DumpGuest(fileName string) (string, error) {
+	s, err := d.GetState()
+	if err != nil {
+		return "", err
+	}
+	if s == state.Running {
+		err := d.Stop()
+		if err != nil {
+			return "", err
+		}
+	}
+	stdOut, err := d.vbmOut("debugvm", d.MachineName, "dumpguestcore", "--filename", fileName)
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
 }
 
 func (d *Driver) Create() error {

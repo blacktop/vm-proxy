@@ -119,7 +119,16 @@ func main() {
 		// create http routes
 		router := mux.NewRouter().StrictSlash(true)
 		// virtualbox routes
+		router.HandleFunc("/vbox/version", vbox.Version).Methods("GET")
 		router.HandleFunc("/vbox/list", vbox.List).Methods("GET")
+		router.HandleFunc("/vbox/status/{nameOrID}", vbox.Status).Methods("GET")
+		router.HandleFunc("/vbox/start/{nameOrID}/{startType}", vbox.Start).Methods("GET")
+		router.HandleFunc("/vbox/stop/{nameOrID}", vbox.Stop).Methods("GET")
+		router.HandleFunc("/vbox/snapshot/restorecurrent/{nameOrID}", vbox.SnapshotRestoreCurrent).Methods("GET")
+		router.HandleFunc("/vbox/snapshot/{nameOrID}/restore/{snapShot}", vbox.SnapshotRestore).Methods("GET")
+		router.HandleFunc("/vbox/nictracefile1/{nameOrID}/{fileName}", vbox.NicTraceFile).Methods("GET")
+		router.HandleFunc("/vbox/nnictrace1/{nameOrID}/{stateOnOff}", vbox.NicTrace).Methods("GET")
+		router.HandleFunc("/vbox/debugvm/{nameOrID}/{fileName}", vbox.DumpVM).Methods("GET")
 		// router.HandleFunc("/vbox/{source:(?:giphy|xkcd|dilbert|default|contrib)}/{file}", updateImageKeywords).Methods("PATCH")
 		// vmware routes
 		router.HandleFunc("/vmware/list", vmware.List).Methods("GET")
