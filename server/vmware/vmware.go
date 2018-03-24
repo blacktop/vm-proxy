@@ -20,7 +20,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	// 	panic(err)
 	// }
 	d := vmware.NewDriver("", "")
-	outPut := d.GetMachineName()
+	outPut := d.DriverName()
 	// if err != nil {
 	// 	w.WriteHeader(http.StatusInternalServerError)
 	// 	w.Write([]byte(err.Error()))
