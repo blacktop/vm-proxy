@@ -14,7 +14,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/docker/machine/libmachine/log"
+	log "github.com/Sirupsen/logrus"
 )
 
 var (

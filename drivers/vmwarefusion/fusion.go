@@ -18,8 +18,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/docker/machine/libmachine/drivers"
-	"github.com/docker/machine/libmachine/log"
+	log "github.com/Sirupsen/logrus"
+	"github.com/blacktop/vm-proxy/drivers"
 	"github.com/docker/machine/libmachine/mcnflag"
 	"github.com/docker/machine/libmachine/mcnutils"
 	"github.com/docker/machine/libmachine/ssh"
@@ -36,7 +36,7 @@ const (
 
 // Driver for VMware Fusion
 type Driver struct {
-	*drivers.BaseDriver
+	// *drivers.BaseDriver
 	Memory         int
 	DiskSize       int
 	CPU            int
@@ -113,15 +113,15 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 
 func NewDriver(hostName, storePath string) drivers.Driver {
 	return &Driver{
-		CPU:         defaultCPU,
-		Memory:      defaultMemory,
-		DiskSize:    defaultDiskSize,
-		SSHPassword: defaultSSHPass,
-		BaseDriver: &drivers.BaseDriver{
-			SSHUser:     defaultSSHUser,
-			MachineName: hostName,
-			StorePath:   storePath,
-		},
+		// CPU:      defaultCPU,
+		// Memory:   defaultMemory,
+		// DiskSize: defaultDiskSize,
+		// SSHPassword: defaultSSHPass,
+		// BaseDriver: &drivers.BaseDriver{
+		// 	SSHUser:     defaultSSHUser,
+		// 	MachineName: hostName,
+		// 	StorePath:   storePath,
+		// },
 	}
 }
 
@@ -135,6 +135,15 @@ func (d *Driver) GetSSHUsername() string {
 	}
 
 	return d.SSHUser
+}
+
+// List lists all VMs
+func (d *Driver) List() (string, error) {
+	stdOut, _, err := vmrun("list")
+	if err != nil {
+		return "", err
+	}
+	return stdOut, nil
 }
 
 // DriverName returns the name of the driver
@@ -218,14 +227,6 @@ func (d *Driver) GetState() (state.State, error) {
 		return state.Running, nil
 	}
 	return state.Stopped, nil
-}
-
-func (d *Driver) ListVMs() (string, error) {
-	stdOut, _, err := vmrun("list")
-	if err != nil {
-		return "", err
-	}
-	return stdOut, nil
 }
 
 // PreCreateCheck checks that the machine creation process can be started safely.

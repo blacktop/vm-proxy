@@ -129,10 +129,14 @@ func main() {
 		router.HandleFunc("/vbox/nictracefile1/{nameOrID}/{fileName}", vbox.NicTraceFile).Methods("GET")
 		router.HandleFunc("/vbox/nnictrace1/{nameOrID}/{stateOnOff}", vbox.NicTrace).Methods("GET")
 		router.HandleFunc("/vbox/debugvm/{nameOrID}/{fileName}", vbox.DumpVM).Methods("GET")
-		// router.HandleFunc("/vbox/{source:(?:giphy|xkcd|dilbert|default|contrib)}/{file}", updateImageKeywords).Methods("PATCH")
 		// vmware routes
 		router.HandleFunc("/vmware/list", vmware.List).Methods("GET")
-		// router.HandleFunc("/vmware/{source:(?:giphy|xkcd|dilbert|default|contrib)}/{file}", updateImageKeywords).Methods("PATCH")
+		router.HandleFunc("/vmware/snapshot", vmware.Snapshot).Methods("GET")
+		router.HandleFunc("/vmware/snapshot/list/{vmx_path}", vmware.SnapshotList).Methods("GET")
+		router.HandleFunc("/vmware/snapshot/revert/{vmx_path}", vmware.SnapshotRevert).Methods("GET")
+		router.HandleFunc("/vmware/snapshot/delete/{vmx_path}", vmware.SnapshotDelete).Methods("GET")
+		router.HandleFunc("/vmware/start/{vmx_path}", vmware.Start).Methods("GET")
+		router.HandleFunc("/vmware/stop/{vmx_path}", vmware.Stop).Methods("GET")
 
 		err := GenerateCerts("dockerhost")
 		if err != nil {
