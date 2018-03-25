@@ -22,6 +22,11 @@ setup: ## Install all the build and lint dependencies
 	dep ensure
 	gometalinter --install
 
+.PHONY: run.server
+run.server: ## Run vm-proxy server
+	@echo "===> Running vm-proxy server..."
+	go run server/*.go -V
+
 .PHONY: test
 test: ## Run all the tests
 	gotestcover $(TEST_OPTIONS) -covermode=atomic -coverprofile=coverage.txt $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=30s

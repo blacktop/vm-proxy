@@ -5,38 +5,29 @@
 package vmwarefusion
 
 import (
-	"archive/tar"
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"net"
 	"os"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"strings"
-	"text/template"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/blacktop/vm-proxy/drivers"
-	"github.com/docker/machine/libmachine/mcnflag"
-	"github.com/docker/machine/libmachine/mcnutils"
-	"github.com/docker/machine/libmachine/ssh"
 	"github.com/docker/machine/libmachine/state"
 	cryptossh "golang.org/x/crypto/ssh"
 )
 
 const (
-	B2DUser        = "docker"
-	B2DPass        = "tcuser"
-	isoFilename    = "boot2docker.iso"
-	isoConfigDrive = "configdrive.iso"
+	defaultSSHUser     = "admin"
+	defaultMachineName = "cuckoo"
 )
 
 // Driver for VMware Fusion
 type Driver struct {
-	// *drivers.BaseDriver
+	*drivers.BaseDriver
 	Memory         int
 	DiskSize       int
 	CPU            int
@@ -47,94 +38,23 @@ type Driver struct {
 	ConfigDriveISO string
 	ConfigDriveURL string
 	NoShare        bool
+
+	VMXPath string
 }
 
-const (
-	defaultSSHUser  = B2DUser
-	defaultSSHPass  = B2DPass
-	defaultDiskSize = 20000
-	defaultCPU      = 1
-	defaultMemory   = 1024
-)
-
-// GetCreateFlags registers the flags this driver adds to
-// "docker hosts create"
-func (d *Driver) GetCreateFlags() []mcnflag.Flag {
-	return []mcnflag.Flag{
-		mcnflag.StringFlag{
-			EnvVar: "FUSION_BOOT2DOCKER_URL",
-			Name:   "vmwarefusion-boot2docker-url",
-			Usage:  "Fusion URL for boot2docker image",
-			Value:  "",
-		},
-		mcnflag.StringFlag{
-			EnvVar: "FUSION_CONFIGDRIVE_URL",
-			Name:   "vmwarefusion-configdrive-url",
-			Usage:  "Fusion URL for cloud-init configdrive",
-			Value:  "",
-		},
-		mcnflag.IntFlag{
-			EnvVar: "FUSION_CPU_COUNT",
-			Name:   "vmwarefusion-cpu-count",
-			Usage:  "number of CPUs for the machine (-1 to use the number of CPUs available)",
-			Value:  defaultCPU,
-		},
-		mcnflag.IntFlag{
-			EnvVar: "FUSION_MEMORY_SIZE",
-			Name:   "vmwarefusion-memory-size",
-			Usage:  "Fusion size of memory for host VM (in MB)",
-			Value:  defaultMemory,
-		},
-		mcnflag.IntFlag{
-			EnvVar: "FUSION_DISK_SIZE",
-			Name:   "vmwarefusion-disk-size",
-			Usage:  "Fusion size of disk for host VM (in MB)",
-			Value:  defaultDiskSize,
-		},
-		mcnflag.StringFlag{
-			EnvVar: "FUSION_SSH_USER",
-			Name:   "vmwarefusion-ssh-user",
-			Usage:  "SSH user",
-			Value:  defaultSSHUser,
-		},
-		mcnflag.StringFlag{
-			EnvVar: "FUSION_SSH_PASSWORD",
-			Name:   "vmwarefusion-ssh-password",
-			Usage:  "SSH password",
-			Value:  defaultSSHPass,
-		},
-		mcnflag.BoolFlag{
-			EnvVar: "FUSION_NO_SHARE",
-			Name:   "vmwarefusion-no-share",
-			Usage:  "Disable the mount of your home directory",
-		},
-	}
-}
-
-func NewDriver(hostName, storePath string) drivers.Driver {
+func NewDriver(vmxPath, storePath string) drivers.Driver {
 	return &Driver{
 		// CPU:      defaultCPU,
 		// Memory:   defaultMemory,
 		// DiskSize: defaultDiskSize,
 		// SSHPassword: defaultSSHPass,
-		// BaseDriver: &drivers.BaseDriver{
-		// 	SSHUser:     defaultSSHUser,
-		// 	MachineName: hostName,
-		// 	StorePath:   storePath,
-		// },
+		VMXPath: vmxPath,
+		BaseDriver: &drivers.BaseDriver{
+			SSHUser:     defaultSSHUser,
+			MachineName: defaultMachineName,
+			StorePath:   storePath,
+		},
 	}
-}
-
-func (d *Driver) GetSSHHostname() (string, error) {
-	return d.GetIP()
-}
-
-func (d *Driver) GetSSHUsername() string {
-	if d.SSHUser == "" {
-		d.SSHUser = "docker"
-	}
-
-	return d.SSHUser
 }
 
 // List lists all VMs
@@ -146,46 +66,13 @@ func (d *Driver) List() (string, error) {
 	return stdOut, nil
 }
 
+func (d *Driver) GetSSHHostname() (string, error) {
+	return d.GetIP()
+}
+
 // DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "vmwarefusion"
-}
-
-func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
-	d.Memory = flags.Int("vmwarefusion-memory-size")
-	d.CPU = flags.Int("vmwarefusion-cpu-count")
-	d.DiskSize = flags.Int("vmwarefusion-disk-size")
-	d.Boot2DockerURL = flags.String("vmwarefusion-boot2docker-url")
-	d.ConfigDriveURL = flags.String("vmwarefusion-configdrive-url")
-	d.ISO = d.ResolveStorePath(isoFilename)
-	d.ConfigDriveISO = d.ResolveStorePath(isoConfigDrive)
-	d.SetSwarmConfigFromFlags(flags)
-	d.SSHUser = flags.String("vmwarefusion-ssh-user")
-	d.SSHPassword = flags.String("vmwarefusion-ssh-password")
-	d.SSHPort = 22
-	d.NoShare = flags.Bool("vmwarefusion-no-share")
-
-	// We support a maximum of 16 cpu to be consistent with Virtual Hardware 10
-	// specs.
-	if d.CPU < 1 {
-		d.CPU = int(runtime.NumCPU())
-	}
-	if d.CPU > 16 {
-		d.CPU = 16
-	}
-
-	return nil
-}
-
-func (d *Driver) GetURL() (string, error) {
-	ip, err := d.GetIP()
-	if err != nil {
-		return "", err
-	}
-	if ip == "" {
-		return "", nil
-	}
-	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 func (d *Driver) GetIP() (string, error) {
@@ -219,7 +106,7 @@ func (d *Driver) GetIP() (string, error) {
 
 func (d *Driver) GetState() (state.State, error) {
 	// VMRUN only tells use if the vm is running or not
-	vmxp, err := filepath.EvalSymlinks(d.vmxPath())
+	vmxp, err := filepath.EvalSymlinks(d.VMXPath)
 	if err != nil {
 		return state.Error, err
 	}
@@ -229,180 +116,12 @@ func (d *Driver) GetState() (state.State, error) {
 	return state.Stopped, nil
 }
 
-// PreCreateCheck checks that the machine creation process can be started safely.
-func (d *Driver) PreCreateCheck() error {
-	// Downloading boot2docker to cache should be done here to make sure
-	// that a download failure will not leave a machine half created.
-	b2dutils := mcnutils.NewB2dUtils(d.StorePath)
-	if err := b2dutils.UpdateISOCache(d.Boot2DockerURL); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (d *Driver) Create() error {
-	b2dutils := mcnutils.NewB2dUtils(d.StorePath)
-	if err := b2dutils.CopyIsoToMachineDir(d.Boot2DockerURL, d.MachineName); err != nil {
-		return err
-	}
-
-	// download cloud-init config drive
-	if d.ConfigDriveURL != "" {
-		if err := b2dutils.DownloadISO(d.ResolveStorePath("."), isoConfigDrive, d.ConfigDriveURL); err != nil {
-			return err
-		}
-	}
-
-	log.Infof("Creating SSH key...")
-	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
-		return err
-	}
-
-	log.Infof("Creating VM...")
-	if err := os.MkdirAll(d.ResolveStorePath("."), 0755); err != nil {
-		return err
-	}
-
-	if _, err := os.Stat(d.vmxPath()); err == nil {
-		return ErrMachineExist
-	}
-
-	// Generate vmx config file from template
-	vmxt := template.Must(template.New("vmx").Parse(vmx))
-	vmxfile, err := os.Create(d.vmxPath())
-	if err != nil {
-		return err
-	}
-	vmxt.Execute(vmxfile, d)
-
-	// Generate vmdk file
-	diskImg := d.ResolveStorePath(fmt.Sprintf("%s.vmdk", d.MachineName))
-	if _, err := os.Stat(diskImg); err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-
-		if err := vdiskmanager(diskImg, d.DiskSize); err != nil {
-			return err
-		}
-	}
-
-	log.Infof("Starting %s...", d.MachineName)
-	vmrun("start", d.vmxPath(), "nogui")
-
-	var ip string
-
-	log.Infof("Waiting for VM to come online...")
-	for i := 1; i <= 60; i++ {
-		ip, err = d.GetIP()
-		if err != nil {
-			log.Debugf("Not there yet %d/%d, error: %s", i, 60, err)
-			time.Sleep(2 * time.Second)
-			continue
-		}
-
-		if ip != "" {
-			log.Debugf("Got an ip: %s", ip)
-			conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, 22), time.Duration(2*time.Second))
-			if err != nil {
-				log.Debugf("SSH Daemon not responding yet: %s", err)
-				time.Sleep(2 * time.Second)
-				continue
-			}
-			conn.Close()
-			break
-		}
-	}
-
-	if ip == "" {
-		return fmt.Errorf("Machine didn't return an IP after 120 seconds, aborting")
-	}
-
-	// we got an IP, let's copy ssh keys over
-	d.IPAddress = ip
-
-	// Do not execute the rest of boot2docker specific configuration
-	// The upload of the public ssh key uses a ssh connection,
-	// this works without installed vmware client tools
-	if d.ConfigDriveURL != "" {
-		var keyfh *os.File
-		var keycontent []byte
-
-		log.Infof("Copy public SSH key to %s [%s]", d.MachineName, d.IPAddress)
-
-		// create .ssh folder in users home
-		if err := executeSSHCommand(fmt.Sprintf("mkdir -p /home/%s/.ssh", d.SSHUser), d); err != nil {
-			return err
-		}
-
-		// read generated public ssh key
-		if keyfh, err = os.Open(d.publicSSHKeyPath()); err != nil {
-			return err
-		}
-		defer keyfh.Close()
-
-		if keycontent, err = ioutil.ReadAll(keyfh); err != nil {
-			return err
-		}
-
-		// add public ssh key to authorized_keys
-		if err := executeSSHCommand(fmt.Sprintf("echo '%s' > /home/%s/.ssh/authorized_keys", string(keycontent), d.SSHUser), d); err != nil {
-			return err
-		}
-
-		// make it secure
-		if err := executeSSHCommand(fmt.Sprintf("chmod 600 /home/%s/.ssh/authorized_keys", d.SSHUser), d); err != nil {
-			return err
-		}
-
-		log.Debugf("Leaving create sequence early, configdrive found")
-		return nil
-	}
-
-	// Generate a tar keys bundle
-	if err := d.generateKeyBundle(); err != nil {
-		return err
-	}
-
-	// Test if /var/lib/boot2docker exists
-	vmrun("-gu", B2DUser, "-gp", B2DPass, "directoryExistsInGuest", d.vmxPath(), "/var/lib/boot2docker")
-
-	// Copy SSH keys bundle
-	vmrun("-gu", B2DUser, "-gp", B2DPass, "CopyFileFromHostToGuest", d.vmxPath(), d.ResolveStorePath("userdata.tar"), "/home/docker/userdata.tar")
-
-	// Expand tar file.
-	vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", "sudo sh -c \"tar xvf /home/docker/userdata.tar -C /home/docker > /var/log/userdata.log 2>&1 && chown -R docker:staff /home/docker\"")
-
-	// copy to /var/lib/boot2docker
-	vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", "sudo /bin/mv /home/docker/userdata.tar /var/lib/boot2docker/userdata.tar")
-
-	// Enable Shared Folders
-	vmrun("-gu", B2DUser, "-gp", B2DPass, "enableSharedFolders", d.vmxPath())
-
-	var shareName, shareDir string // TODO configurable at some point
-	switch runtime.GOOS {
-	case "darwin":
-		shareName = "Users"
-		shareDir = "/Users"
-		// TODO "linux" and "windows"
-	}
-
-	if shareDir != "" && !d.NoShare {
-		if _, err := os.Stat(shareDir); err != nil && !os.IsNotExist(err) {
-			return err
-		} else if !os.IsNotExist(err) {
-			// add shared folder, create mountpoint and mount it.
-			vmrun("-gu", B2DUser, "-gp", B2DPass, "addSharedFolder", d.vmxPath(), shareName, shareDir)
-			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; sudo mount --bind /mnt/hgfs/" + shareDir + " " + shareDir + " || [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
-			vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", command)
-		}
-	}
-	return nil
+	return fmt.Errorf("Create() has not been implimented")
 }
 
 func (d *Driver) Start() error {
-	vmrun("start", d.vmxPath(), "nogui")
+	vmrun("start", d.VMXPath, "nogui")
 
 	// Do not execute the rest of boot2docker specific configuration, exit here
 	if d.ConfigDriveURL != "" {
@@ -410,30 +129,30 @@ func (d *Driver) Start() error {
 		return nil
 	}
 
-	log.Debugf("Mounting Shared Folders...")
-	var shareName, shareDir string // TODO configurable at some point
-	switch runtime.GOOS {
-	case "darwin":
-		shareName = "Users"
-		shareDir = "/Users"
-		// TODO "linux" and "windows"
-	}
+	// log.Debugf("Mounting Shared Folders...")
+	// var shareName, shareDir string // TODO configurable at some point
+	// switch runtime.GOOS {
+	// case "darwin":
+	// 	shareName = "Users"
+	// 	shareDir = "/Users"
+	// 	// TODO "linux" and "windows"
+	// }
 
-	if shareDir != "" {
-		if _, err := os.Stat(shareDir); err != nil && !os.IsNotExist(err) {
-			return err
-		} else if !os.IsNotExist(err) {
-			// create mountpoint and mount shared folder
-			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; sudo mount --bind /mnt/hgfs/" + shareDir + " " + shareDir + " || [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
-			vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", command)
-		}
-	}
+	// if shareDir != "" {
+	// 	if _, err := os.Stat(shareDir); err != nil && !os.IsNotExist(err) {
+	// 		return err
+	// 	} else if !os.IsNotExist(err) {
+	// 		// create mountpoint and mount shared folder
+	// 		command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; sudo mount --bind /mnt/hgfs/" + shareDir + " " + shareDir + " || [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
+	// 		vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.VMXPath, "/bin/sh", command)
+	// 	}
+	// }
 
 	return nil
 }
 
 func (d *Driver) Stop() error {
-	_, _, err := vmrun("stop", d.vmxPath(), "nogui")
+	_, _, err := vmrun("stop", d.VMXPath, "nogui")
 	return err
 }
 
@@ -450,7 +169,7 @@ func (d *Driver) Restart() error {
 }
 
 func (d *Driver) Kill() error {
-	_, _, err := vmrun("stop", d.vmxPath(), "hard nogui")
+	_, _, err := vmrun("stop", d.VMXPath, "hard nogui")
 	return err
 }
 
@@ -462,7 +181,7 @@ func (d *Driver) Remove() error {
 		}
 	}
 	log.Infof("Deleting %s...", d.MachineName)
-	vmrun("deleteVM", d.vmxPath(), "nogui")
+	vmrun("deleteVM", d.VMXPath, "nogui")
 	return nil
 }
 
@@ -470,8 +189,11 @@ func (d *Driver) Upgrade() error {
 	return fmt.Errorf("VMware Fusion does not currently support the upgrade operation")
 }
 
-func (d *Driver) vmxPath() string {
-	return d.ResolveStorePath(fmt.Sprintf("%s.vmx", d.MachineName))
+func (d *Driver) vmxPath() (string, error) {
+	if _, err := os.Stat(d.VMXPath); os.IsNotExist(err) {
+		return "", fmt.Errorf("vmx:%s file does not exist", d.VMXPath)
+	}
+	return d.VMXPath, nil
 }
 
 func (d *Driver) vmdkPath() string {
@@ -483,7 +205,7 @@ func (d *Driver) getMacAddressFromVmx() (string, error) {
 	var vmxcontent []byte
 	var err error
 
-	if vmxfh, err = os.Open(d.vmxPath()); err != nil {
+	if vmxfh, err = os.Open(d.VMXPath); err != nil {
 		return "", err
 	}
 	defer vmxfh.Close()
@@ -504,7 +226,7 @@ func (d *Driver) getMacAddressFromVmx() (string, error) {
 	}
 
 	if macaddr == "" {
-		return "", fmt.Errorf("couldn't find MAC address in VMX file %s", d.vmxPath())
+		return "", fmt.Errorf("couldn't find MAC address in VMX file %s", d.VMXPath)
 	}
 
 	log.Debugf("MAC address in VMX: %s", macaddr)
@@ -683,65 +405,6 @@ func (d *Driver) getIPfromDHCPLeaseFile(dhcpfile, macaddr string) (string, error
 	log.Debugf("IP found in DHCP lease table: %s", currentip)
 
 	return currentip, nil
-}
-
-func (d *Driver) publicSSHKeyPath() string {
-	return d.GetSSHKeyPath() + ".pub"
-}
-
-// Make a boot2docker userdata.tar key bundle
-func (d *Driver) generateKeyBundle() error {
-	log.Debugf("Creating Tar key bundle...")
-
-	magicString := "boot2docker, this is vmware speaking"
-
-	tf, err := os.Create(d.ResolveStorePath("userdata.tar"))
-	if err != nil {
-		return err
-	}
-	defer tf.Close()
-	var fileWriter = tf
-
-	tw := tar.NewWriter(fileWriter)
-	defer tw.Close()
-
-	// magicString first so we can figure out who originally wrote the tar.
-	file := &tar.Header{Name: magicString, Size: int64(len(magicString))}
-	if err := tw.WriteHeader(file); err != nil {
-		return err
-	}
-	if _, err := tw.Write([]byte(magicString)); err != nil {
-		return err
-	}
-	// .ssh/key.pub => authorized_keys
-	file = &tar.Header{Name: ".ssh", Typeflag: tar.TypeDir, Mode: 0700}
-	if err := tw.WriteHeader(file); err != nil {
-		return err
-	}
-	pubKey, err := ioutil.ReadFile(d.publicSSHKeyPath())
-	if err != nil {
-		return err
-	}
-	file = &tar.Header{Name: ".ssh/authorized_keys", Size: int64(len(pubKey)), Mode: 0644}
-	if err := tw.WriteHeader(file); err != nil {
-		return err
-	}
-	if _, err := tw.Write([]byte(pubKey)); err != nil {
-		return err
-	}
-	file = &tar.Header{Name: ".ssh/authorized_keys2", Size: int64(len(pubKey)), Mode: 0644}
-	if err := tw.WriteHeader(file); err != nil {
-		return err
-	}
-	if _, err := tw.Write([]byte(pubKey)); err != nil {
-		return err
-	}
-	if err := tw.Close(); err != nil {
-		return err
-	}
-
-	return nil
-
 }
 
 // execute command over SSH with user / password authentication

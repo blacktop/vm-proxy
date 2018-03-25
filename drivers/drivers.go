@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/docker/machine/libmachine/log"
-	"github.com/docker/machine/libmachine/mcnflag"
 	"github.com/docker/machine/libmachine/state"
 )
 
@@ -17,10 +16,6 @@ type Driver interface {
 
 	// DriverName returns the name of the driver
 	DriverName() string
-
-	// GetCreateFlags returns the mcnflag.Flag slice representing the flags
-	// that can be set, their descriptions and defaults.
-	GetCreateFlags() []mcnflag.Flag
 
 	// GetIP returns an IP or hostname that this host is available at
 	// e.g. 1.2.3.4 or docker-host-d60b70a14d3a.cloudapp.net
@@ -43,7 +38,7 @@ type Driver interface {
 
 	// GetURL returns a Docker compatible host URL for connecting to this host
 	// e.g. tcp://1.2.3.4:2376
-	GetURL() (string, error)
+	// GetURL() (string, error)
 
 	// GetState returns the state that the host is in (running, stopped, etc)
 	GetState() (state.State, error)
@@ -63,7 +58,7 @@ type Driver interface {
 
 	// SetConfigFromFlags configures the driver with the object that was returned
 	// by RegisterCreateFlags
-	SetConfigFromFlags(opts DriverOptions) error
+	// SetConfigFromFlags(opts DriverOptions) error
 
 	// Start a host
 	Start() error
@@ -72,7 +67,7 @@ type Driver interface {
 	Stop() error
 
 	// List VMs
-	List() string
+	List() (string, error)
 }
 
 var ErrHostIsNotRunning = errors.New("Host is not running")
