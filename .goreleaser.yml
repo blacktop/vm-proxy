@@ -8,7 +8,7 @@ builds:
     goos:
       # - windows
       - darwin
-      - linux
+      # - linux
     goarch:
       - amd64
     # flags: -buildmode=pie
