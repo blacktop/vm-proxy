@@ -8,8 +8,8 @@
 
 ## Client Docker Images
 
-* blacktop/vbox
-* blacktop/vmware
+* [blacktop/vbox](https://github.com/blacktop/vm-proxy/blob/master/clients/vbox/README.md)
+* [blacktop/vmware](https://github.com/blacktop/vm-proxy/blob/master/clients/vmware/README.md)
 
 ## Getting Started _(macOS)_
 
@@ -90,6 +90,7 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 * [x] build small base images with VBoxManage in them
 * [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
 * [x] auto-create certs on first run
+* [ ] standardize on a log provider (apex/logrus)
 
 ## Issues
 
