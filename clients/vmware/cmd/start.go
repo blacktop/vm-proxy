@@ -21,7 +21,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -39,9 +38,9 @@ var startCmd = &cobra.Command{
 		if len(args) < 1 {
 			return errors.New("requires a VMX path")
 		}
-		if _, err := os.Stat(args[0]); os.IsNotExist(err) {
-			return fmt.Errorf("vmx:%s does not exist", args[0])
-		}
+		// if _, err := os.Stat(args[0]); os.IsNotExist(err) {
+		// 	return fmt.Errorf("vmx:%s does not exist", args[0])
+		// }
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {

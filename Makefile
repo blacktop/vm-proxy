@@ -71,7 +71,9 @@ release: ## Create a new release from the VERSION
 
 ci: lint test ## Run all the tests and code checks
 
-build: ## Build a beta version of vm-proxy
+build: build.server build.vbox build.vmware ## Build all components
+
+build.server: ## Build a beta version of vm-proxy
 	@echo "===> Building Binaries"
 	CGO_ENABLED=0 go build -buildmode=pie -i -o $(NAME) -ldflags="-w -s" server/*.go
 
@@ -80,10 +82,20 @@ build.vbox: ## Build a beta version of vbox client
 	@echo "===> Building vbox client"
 	docker build -t $(REPO)/vbox:dev clients/vbox/
 
+.PHONY: build.vmware
+build.vmware: ## Build a beta version of vmware client
+	@echo "===> Building vmware client"
+	docker build -t $(REPO)/vmware:dev clients/vmware/
+
 .PHONY: ssh.vbox
 ssh.vbox: ## Build a beta version of vbox client
 	@echo "===> sshing into vbox client"
 	docker run -it --rm --entrypoint=sh $(REPO)/vbox:dev
+
+.PHONY: ssh.vmware
+ssh.vmware: ## Build a beta version of vmware client
+	@echo "===> sshing into vmware client"
+	docker run -it --rm --entrypoint=sh $(REPO)/vmware:dev
 
 clean: ## Clean up artifacts
 	@rm -rf $(HOME)/.vmproxy || true
