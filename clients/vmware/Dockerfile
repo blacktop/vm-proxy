@@ -22,7 +22,7 @@ LABEL maintainer "https://github.com/blacktop"
 COPY --from=builder /go/src/github.com/blacktop/vm-proxy/clients/vmware/build/vmware /bin/vmrun
 COPY vmware.yaml /root/.vmware.yaml
 
-ENTRYPOINT ["/bin/VBoxManage"]
+ENTRYPOINT ["/bin/vmrun"]
 CMD ["--help"]
 
 #############################################

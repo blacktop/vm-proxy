@@ -9,9 +9,41 @@
 ## Getting Started
 
 ```sh
-$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vmware --help
+$ docker run --rm --add-host=dockerhost:$(ipconfig getifaddr en0) blacktop/vmware vmrun start "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
 
 ...
+```
+
+### Start VM
+
+```sh
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vmware:dev start "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
+```
+
+### List `VirtualBox` VMs
+
+```sh
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vmware:dev list
+```
+
+```sh
+Total running VMs: 1
+/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx
+```
+
+### Stop VM
+
+```sh
+$ docker run --rm \
+             --add-host=dockerhost:$(ipconfig getifaddr en0) \
+             -v $HOME/.vmproxy:/root/.vmproxy \
+             blacktop/vmware:dev stop "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
 ```
 
 ## Issues

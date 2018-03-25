@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"path/filepath"
 	"strings"
 
@@ -74,8 +75,11 @@ var startCmd = &cobra.Command{
 			},
 		}
 
+		v := url.Values{}
+		v.Set("vmx_path", args[0])
+
 		// Create request
-		req, err := http.NewRequest("POST", "https://"+host+":"+port+"/vmware/start", strings.NewReader(args[0]))
+		req, err := http.NewRequest("POST", "https://"+host+":"+port+"/vmware/start", strings.NewReader(v.Encode()))
 		assert(err)
 
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
