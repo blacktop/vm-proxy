@@ -10,10 +10,24 @@
 
 ```sh
 $ docker run --rm blacktop/vmware --help
-```
 
-```
+vmrun version 1.17.0 build-7520154
 
+Usage:
+  vmrun [command]
+
+Available Commands:
+  help        Help about any command
+  list        List all running VMs
+  start       Start a VM
+  stop        Stop a VM
+
+Flags:
+      --config string   config file (default is $HOME/.vmware.yaml)
+  -h, --help            help for vmrun
+  -t, --toggle          Help message for toggle
+
+Use "vmrun [command] --help" for more information about a command.
 ```
 
 ### Start VM
