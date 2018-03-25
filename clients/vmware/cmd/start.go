@@ -21,7 +21,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
+	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
@@ -32,14 +34,17 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "List all running VMs",
+	Short: "Start a VM",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			return errors.New("requires a VMX path")
+		}
+		if _, err := os.Stat(args[0]); os.IsNotExist(err) {
+			return fmt.Errorf("vmx:%s does not exist", args[0])
+		}
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// d := virtualbox.NewDriver("", "")
-		// outList, err := d.List()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// fmt.Print(outList)
 
 		host := viper.GetString("server.host")
 		port := viper.GetString("server.port")
@@ -71,7 +76,10 @@ var startCmd = &cobra.Command{
 		}
 
 		// Create request
-		req, err := http.NewRequest("GET", "https://"+host+":"+port+"/vmware/start", nil)
+		req, err := http.NewRequest("POST", "https://"+host+":"+port+"/vmware/start", strings.NewReader(args[0]))
+		assert(err)
+
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 		// Fetch Request
 		resp, err := client.Do(req)
