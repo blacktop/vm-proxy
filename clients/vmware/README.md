@@ -2,7 +2,7 @@
 
 # blacktop/vmware
 
-[![CircleCI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE) [![Docker Stars](https://img.shields.io/docker/stars/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Image](https://img.shields.io/badge/docker%20image-119MB-blue.svg)](https://hub.docker.com/r/blacktop/vmware/)
+[![CircleCI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE) [![Docker Stars](https://img.shields.io/docker/stars/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Image](https://img.shields.io/badge/docker%20image-11MB-blue.svg)](https://hub.docker.com/r/blacktop/vmware/)
 
 > VMware Client for `vm-proxy`
 
