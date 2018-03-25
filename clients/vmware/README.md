@@ -39,7 +39,7 @@ $ docker run --rm \
              blacktop/vmware start "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
 ```
 
-### List `VirtualBox` VMs
+### List VMs
 
 ```sh
 $ docker run --rm \

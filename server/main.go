@@ -92,8 +92,12 @@ func main() {
 		{
 			Name:    "update",
 			Aliases: []string{"u"},
-			Usage:   "Update images",
+			Usage:   "Update certificates",
 			Action: func(c *cli.Context) error {
+				err := RegenerateCerts("dockerhost")
+				if err != nil {
+					log.Fatal(err)
+				}
 				return nil
 			},
 		},

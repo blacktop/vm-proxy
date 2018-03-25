@@ -35,3 +35,25 @@ func GenerateCerts(host string) error {
 	}
 	return nil
 }
+
+// RegenerateCerts regenerates new SSL certs for vm-proxy server
+func RegenerateCerts(host string) error {
+
+	home, err := homedir.Dir()
+	if err != nil {
+		return errors.Wrap(err, "could not detect users home directory")
+	}
+
+	if _, err := os.Stat(filepath.Join(home, ".vmproxy")); os.IsNotExist(err) {
+		os.Mkdir(filepath.Join(home, ".vmproxy"), os.ModePerm)
+	}
+
+	certPath := filepath.Join(home, ".vmproxy", "cert.pem")
+	keyPath := filepath.Join(home, ".vmproxy", "key.pem")
+
+	err = httpscerts.Generate(certPath, keyPath, host)
+	if err != nil {
+		return errors.Wrap(err, "could not create https certs")
+	}
+	return nil
+}
