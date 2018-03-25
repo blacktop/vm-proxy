@@ -1,27 +1,152 @@
 # Golang CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
+
 version: 2
 jobs:
-  build:
+  server:
     docker:
-      # specify the version
       - image: circleci/golang:1.9
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    #### TEMPLATE_NOTE: go expects specific checkout path representing url
-    #### expecting it in the form of
-    ####   /go/src/github.com/circleci/go-tool
-    ####   /go/src/bitbucket.org/circleci/go-tool
     working_directory: /go/src/github.com/blacktop/vm-proxy
     steps:
       - checkout
       - setup_remote_docker
-      # specify any bash command here prefixed with `run: `
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: dep ensure
       - run: go run server/*.go --help
+  # Virtualbox Client
+  vbox:
+    docker:
+      - image: docker:17.11.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 17.11.0-ce
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache jq
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/vbox.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/vbox.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            cd clients/vbox
+            docker version
+            docker build --cache-from=vbox -t vbox .
+      - run:
+          name: Get Docker image size
+          command: |
+            mkdir /tmp/artifacts;
+            docker images --format "{{.Size}}" vbox > /tmp/artifacts/vbox-size;
+      - store_artifacts:
+          path: /tmp/artifacts
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/vbox.tar vbox
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/vbox.tar
+      - run:
+          name: Run vbox
+          command: |
+            set -x
+            docker run vbox
+      # - run:
+      #     name: Run test
+      #     command: |
+      #       set -x
+      #       docker run --rm --network container:es blacktop/httpie GET http://localhost:9200
+  # VMware Client
+  vmware:
+    docker:
+      - image: docker:17.11.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 17.11.0-ce
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache jq
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/vmware.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /caches/vmware.tar | true
+      - run:
+          name: Build application Docker image
+          command: |
+            cd clients/vmware
+            docker version
+            docker build --cache-from=vmware -t vmware .
+      - run:
+          name: Get Docker image size
+          command: |
+            mkdir /tmp/artifacts;
+            docker images --format "{{.Size}}" vmware > /tmp/artifacts/vmware-size;
+      - store_artifacts:
+          path: /tmp/artifacts
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/vmware.tar vmware
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/vmware.tar
+      - run:
+          name: Run vmware
+          command: |
+            set -x
+            docker run vmware
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - server
+      - vbox
+      - vmware
+
+# version: 2
+# jobs:
+#   build:
+#     docker:
+#       # specify the version
+#       - image: circleci/golang:1.9
+
+#       # Specify service dependencies here if necessary
+#       # CircleCI maintains a library of pre-built images
+#       # documented at https://circleci.com/docs/2.0/circleci-images/
+#       # - image: circleci/postgres:9.4
+
+#     #### TEMPLATE_NOTE: go expects specific checkout path representing url
+#     #### expecting it in the form of
+#     ####   /go/src/github.com/circleci/go-tool
+#     ####   /go/src/bitbucket.org/circleci/go-tool
+#     working_directory: /go/src/github.com/blacktop/vm-proxy
+#     steps:
+#       - checkout
+#       - setup_remote_docker
+#       # specify any bash command here prefixed with `run: `
+#       - run: go get -u github.com/golang/dep/cmd/dep
+#       - run: dep ensure
+#       - run: go run server/*.go --help
