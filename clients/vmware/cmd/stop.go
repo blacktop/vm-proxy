@@ -15,24 +15,84 @@
 package cmd
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
+	"path/filepath"
+	"strings"
 
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // stopCmd represents the stop command
 var stopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Stop a VM",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			return errors.New("requires a VMX path")
+		}
+		// if _, err := os.Stat(args[0]); os.IsNotExist(err) {
+		// 	return fmt.Errorf("vmx:%s does not exist", args[0])
+		// }
+		return nil
+	},
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("stop called")
+
+		host := viper.GetString("server.host")
+		port := viper.GetString("server.port")
+
+		home, err := homedir.Dir()
+		if err != nil {
+			log.Fatal(errors.Wrap(err, "could not detect users home directory"))
+		}
+		// Create client
+		caCert, err := ioutil.ReadFile(filepath.Join(home, ".vmproxy", "cert.pem"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		// cert, err := tls.LoadX509KeyPair("client.crt", "client.key")
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		client := &http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: caCertPool,
+					// Certificates: []tls.Certificate{cert},
+				},
+			},
+		}
+
+		v := url.Values{}
+		v.Set("vmx_path", args[0])
+
+		// Create request
+		req, err := http.NewRequest("POST", "https://"+host+":"+port+"/vmware/stop", strings.NewReader(v.Encode()))
+		assert(err)
+
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+		// Fetch Request
+		resp, err := client.Do(req)
+		assert(err)
+
+		// Read Response Body
+		respBody, _ := ioutil.ReadAll(resp.Body)
+
+		// Display Results
+		fmt.Print(string(respBody))
 	},
 }
 
