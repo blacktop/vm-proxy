@@ -141,6 +141,7 @@ func main() {
 		router.HandleFunc("/vmware/snapshot/delete/{vmx_path}", vmware.SnapshotDelete).Methods("GET")
 		router.HandleFunc("/vmware/start", vmware.Start).Methods("POST")
 		router.HandleFunc("/vmware/stop", vmware.Stop).Methods("POST")
+		router.HandleFunc("/vmware/info", vmware.Info).Methods("POST")
 
 		err := GenerateCerts("dockerhost")
 		if err != nil {

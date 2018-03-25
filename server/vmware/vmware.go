@@ -141,3 +141,29 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// Info gets info of a VM for a given vmx
+func Info(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+
+	r.ParseForm()
+
+	if len(r.Form["vmx_path"]) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		err := errors.New("bad request - please supply `vmx_path` params")
+		w.Write([]byte(err.Error()))
+		log.WithError(err).Error("vmware start failed")
+		return
+	}
+
+	d := vmwarefusion.NewDriver(r.Form["vmx_path"][0], "")
+
+	ip, err := d.GetIP()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(ip))
+}
