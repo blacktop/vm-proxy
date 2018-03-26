@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](https://github.com/blacktop/vm-proxy/blob/master/LICENSE) [![Docker Stars](https://img.shields.io/docker/stars/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacktop/vmware.svg)](https://hub.docker.com/r/blacktop/vmware/) [![Docker Image](https://img.shields.io/badge/docker%20image-11MB-blue.svg)](https://hub.docker.com/r/blacktop/vmware/)
 
-> VMware Client for `vm-proxy`
+> VMware Client for [vm-proxy](https://github.com/blacktop/vm-proxy)
 
 ---
 
@@ -38,7 +38,7 @@ Use "vmrun [command] --help" for more information about a command.
 $ docker run --rm \
              --add-host=dockerhost:$(ipconfig getifaddr en0) \
              -v $HOME/.vmproxy:/root/.vmproxy \
-             blacktop/vmware start "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
+             blacktop/vmware start "Ubuntu 64-bit 16.04.vmx"
 ```
 
 ### List VMs
@@ -52,7 +52,7 @@ $ docker run --rm \
 
 ```sh
 Total running VMs: 1
-/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx
+Ubuntu 64-bit 16.04.vmx
 ```
 
 ### Stop VM
@@ -61,7 +61,7 @@ Total running VMs: 1
 $ docker run --rm \
              --add-host=dockerhost:$(ipconfig getifaddr en0) \
              -v $HOME/.vmproxy:/root/.vmproxy \
-             blacktop/vmware stop "/Users/blacktop/Documents/Virtual Machines.localized/Ubuntu 64-bit 16.04.vmwarevm/Ubuntu 64-bit 16.04.vmx"
+             blacktop/vmware stop "Ubuntu 64-bit 16.04.vmx"
 ```
 
 ## Issues

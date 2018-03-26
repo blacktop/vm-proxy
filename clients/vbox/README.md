@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](https://github.com/blacktop/vm-proxy/blob/master/LICENSE) [![Docker Stars](https://img.shields.io/docker/stars/blacktop/vbox.svg)](https://hub.docker.com/r/blacktop/vbox/) [![Docker Pulls](https://img.shields.io/docker/pulls/blacktop/vbox.svg)](https://hub.docker.com/r/blacktop/vbox/) [![Docker Image](https://img.shields.io/badge/docker%20image-11MB-blue.svg)](https://hub.docker.com/r/blacktop/vbox/)
 
-> VirtualBox Client for `vm-proxy`
+> VirtualBox Client for [vm-proxy](https://github.com/blacktop/vm-proxy)
 
 ---
 
