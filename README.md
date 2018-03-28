@@ -14,13 +14,13 @@ The main use case I am working towards for my _MVP_ is to support the local hype
 
 ## How?
 
-`vm-proxy` works by creating a secure local webhook to _proxy_ `VBoxManage` or `vmrun` out the the host running docker. So from the container's perspective it is using the real tools locally, but they are instead using a small golang binary that securely communicates to `vm-proxy`.
+**vm-proxy** works by creating a secure local webhook to _proxy_ `VBoxManage` or `vmrun` out the the host running docker. So from the container's perspective it is using the real tools locally, but they are instead using a small golang binary that securely communicates to **vm-proxy**.
 
-`vm-proxy` also creates SSL certs and a token to secure communications between the container and the hypervisor. Also I will only expose a minimal set of hypervisor functionality at first to prevent malicious actors from trying to harm your host or VMs. I will also sanitize input sent via the clients to the server.
+**vm-proxy** also creates SSL certs and a token to secure communications between the container and the hypervisor. Also I will only expose a minimal set of hypervisor functionality at first to prevent malicious actors from trying to harm your host or VMs. I will also sanitize input sent via the clients to the server.
 
-Others have created solutions where containers can `ssh` to the host and run **ANY** commands, which I believe is not safe (think `rm -rf /`). Or you can leverage APIs exposed by the hypervisors, but then you have to maintain your middleware to talk to them. You also will need to setup and start the API servers locally.
+Others have created solutions where containers can **ssh** to the host and run **ANY** commands, which I believe is not safe (think `rm -rf /`). Or you can leverage APIs exposed by the hypervisors, but then you have to maintain your middleware to talk to them. You also will need to setup and start the API servers locally.
 
-My solution (targeting cuckoo) requires **NO** changes to cuckoo as it thinks it is talking to the real `VBoxManage`/`vmrun` binaries, making it easier to maintain in the long term and requiring no changes on cuckoo's side.
+My solution _(targeting cuckoo)_ requires **NO** changes to cuckoo as it thinks it is talking to the real `VBoxManage`/`vmrun` binaries, making it easier to maintain in the long term and requiring no changes on cuckoo's side.
 
 ## Client Docker Images
 
