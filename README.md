@@ -1,6 +1,6 @@
 # vm-proxy [WIP] :construction:
 
-[![Circle CI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![GitHub release](https://img.shields.io/github/release/blacktop/vm-proxy.svg)](https://github.com/https://github.com/blacktop/vm-proxy/releases/releases) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE)
+[![Circle CI](https://circleci.com/gh/blacktop/vm-proxy.png?style=shield)](https://circleci.com/gh/blacktop/vm-proxy) [![Github All Releases](https://img.shields.io/github/downloads/blacktop/vm-proxy/total.svg)](https://github.com/blacktop/vm-proxy) [![GitHub release](https://img.shields.io/github/release/blacktop/vm-proxy.svg)](https://github.com/https://github.com/blacktop/vm-proxy/releases/releases) [![License](https://img.shields.io/badge/licence-Apache%202.0-blue.svg)](LICENSE)
 
 > **VBoxManage/vmrun** proxy to allow communication from within a VM to the hypervisor running the VM.
 
@@ -24,8 +24,8 @@ My solution _(targeting cuckoo)_ requires **NO** changes to cuckoo as it thinks 
 
 ## Client Docker Images
 
-* [blacktop/vbox](https://github.com/blacktop/vm-proxy/blob/master/clients/vbox/README.md)
-* [blacktop/vmware](https://github.com/blacktop/vm-proxy/blob/master/clients/vmware/README.md)
+- [blacktop/vbox](https://github.com/blacktop/vm-proxy/blob/master/clients/vbox/README.md)
+- [blacktop/vmware](https://github.com/blacktop/vm-proxy/blob/master/clients/vmware/README.md)
 
 ## Getting Started _(macOS)_
 
@@ -100,13 +100,13 @@ INFO[0000] vm-proxy service listening                    host=127.0.0.1 port=399
 
 ## TODO
 
-* [ ] Add version check to debugvm calls
-* [ ] vmrun
-* [x] create homebrew installer for vm-proxy-server
-* [x] build small base images with VBoxManage in them
-* [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
-* [x] auto-create certs on first run
-* [ ] standardize on a log provider (apex/logrus)
+- [ ] Add version check to debugvm calls
+- [ ] vmrun
+- [x] create homebrew installer for vm-proxy-server
+- [x] build small base images with VBoxManage in them
+- [ ] figure out filesystem translation for dropping PCAP or memory dumps so container can see them (using volumes?)
+- [x] auto-create certs on first run
+- [ ] standardize on a log provider (apex/logrus)
 
 ## Issues
 
